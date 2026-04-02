@@ -1,0 +1,9 @@
+name,city,score,category
+Alice,New York,90,Tech
+ALICE,NEW YORK,90,tech
+Bob,,85,Finance
+Carol,Boston,75,Design
+Carol,Boston,75,Design
+David,Chicago,88,Tech
+DAVID,CHICAGO,88,tech
+Eve,Seattle,92,Finance

@@ -1,0 +1,48 @@
+COST_OF_LIVING = 5
+COST_PER_ACTION = 2
+COST_SELLER_LISTING = 1
+COST_MUTATION = 10
+REWARD_WINNER = 100
+PENALTY_LOSER = 20
+REWARD_PER_USD_SOLD = 50
+PENALTY_NO_SALE = 5
+REPRODUCTION_THRESHOLD = 500
+FARM_DEATH_THRESHOLD = 0
+FARM_EXPANSION_ROI = 0.3
+CAPITAL_BONUS_GOOD_FARM = 500
+CAPITAL_PENALTY_BAD_FARM = 300
+CYCLE_INTERVAL_SECONDS = 5
+INITIAL_CREDITS = 200
+NO_PROFIT_THRESHOLD = 5
+
+DISCORD_ENABLED = True           # Activado — token configurado en variable de entorno
+DISCORD_TARGET_CHANNELS = ["1488986417182019780"]
+
+# Gumroad product URLs by niche (public permalinks)
+GUMROAD_PRODUCT_URLS: dict[str, str] = {
+    "data_cleaning": "https://leonix63.gumroad.com/l/fpwkdg",
+    "auto_reports": "https://leonix63.gumroad.com/l/frhqhf",
+    "product_listing": "https://leonix63.gumroad.com/l/jzzsv",
+    "monetized_content": "https://leonix63.gumroad.com/l/wnuah",
+}
+
+# Gumroad internal product IDs (required for API PUT requests)
+GUMROAD_PRODUCT_IDS: dict[str, str] = {
+    "data_cleaning": "EIvVFKNtICACXEnRyKlE8A==",
+    "auto_reports": "8yBjBIZjBkQF-YYR_yeS3A==",
+    "product_listing": "YD_J2-XUskVt2Ts-vqnzug==",
+    "monetized_content": "WW09wqbFXXQuXTsxqqV-hg==",
+}
+
+SHOPIFY_ENABLED = False          # Se activa cuando las credenciales OAuth estén configuradas
+GUMROAD_ENABLED = True           # Activado — token configurado en variable de entorno
+LEMONSQUEEZY_ENABLED = False     # DESHABILITADO PERMANENTEMENTE — no usar esta plataforma
+GOOGLE_DRIVE_ENABLED = False     # Desactivado — requiere GOOGLE_DRIVE_CREDENTIALS_JSON
+
+# Google Drive folder IDs by farm type
+GOOGLE_DRIVE_FOLDER_IDS: dict[str, str] = {
+    "data_cleaning": "1qjVs8bQ6XzuSzuMin1fvR82wA-7NZza9",
+    "auto_reports": "1tcd4KREz_ABMzORmg_a9s5BXvuZHsjxD",
+    "product_listing": "1P7SCGJ0m8J-wLg678eZWkvYfcm5y5v7g",
+    "monetized_content": "1GO03fu8aM0nXNYxNBOSFb4ESkWwgidcg",
+}

@@ -1,0 +1,283 @@
+{
+  "pack_info": {
+    "name": "Optimized Product Listings Pack - MercadoLibre LATAM",
+    "version": "1.0.0",
+    "generated_by": "Multi-Farm System - ProductListing Farm",
+    "date_generated": "2025-04",
+    "total_listings": 10,
+    "target_platform": "mercadolibre",
+    "target_market": "LATAM (AR, MX, BR, CL, CO)"
+  },
+  "listings": [
+    {
+      "id": "PL-001",
+      "title": "Auriculares Bluetooth Inalambricos Premium - Cancelacion de Ruido Activa",
+      "description": "Auriculares inalambricos de alta fidelidad con cancelacion de ruido activa (ANC). Bateria de 40 horas, carga rapida USB-C, microfono incorporado para llamadas. Compatible con iPhone, Android, PC y Mac. Incluye estuche de transporte premium y cable de carga. Garantia oficial de 12 meses.",
+      "price": {
+        "amount": 45990,
+        "currency": "ARS"
+      },
+      "category_path": "Electronica > Audio > Auriculares > Inalambricos",
+      "attributes": {
+        "marca": "TechPro",
+        "modelo": "ANC-500",
+        "color": "Negro",
+        "conectividad": "Bluetooth 5.3",
+        "tipo_auricular": "Over-ear",
+        "cancelacion_ruido": "Activa (ANC)",
+        "duracion_bateria": "40 horas",
+        "peso": "250g",
+        "garantia": "12 meses"
+      },
+      "tags": ["auriculares", "bluetooth", "cancelacion ruido", "wireless", "premium", "musica", "gaming"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 94
+    },
+    {
+      "id": "PL-002",
+      "title": "Teclado Mecanico Gaming RGB - Switches Blue - Antighosting",
+      "description": "Teclado mecanico para gaming con switches blue tactiles y sonido satisfactorio. Retroiluminacion RGB personalizable con software incluido. 104 teclas con anti-ghosting completo. Base metalica resistente, cable USB trenzado de 1.8m. Ideal para gaming competitivo y trabajo prolongado.",
+      "price": {
+        "amount": 32500,
+        "currency": "ARS"
+      },
+      "category_path": "Computacion > Perifericos > Teclados > Mecanicos",
+      "attributes": {
+        "marca": "GameForce",
+        "modelo": "MK-PRO",
+        "tipo_switch": "Blue (Tactil)",
+        "iluminacion": "RGB 16.8M colores",
+        "layout": "Espanol Latinoamerica",
+        "conexion": "USB con cable",
+        "material": "Aluminio + ABS",
+        "n_key_rollover": "Completo"
+      },
+      "tags": ["teclado", "mecanico", "gaming", "rgb", "switches blue", "gamer", "pc"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 91
+    },
+    {
+      "id": "PL-003",
+      "title": "Monitor Gamer 27 Pulgadas 144Hz 1ms - Full HD IPS",
+      "description": "Monitor gaming de 27 pulgadas con panel IPS para colores vibrantes y angulos de vision amplios. 144Hz de tasa de refresco y 1ms de tiempo de respuesta para gaming fluido. Compatible con FreeSync y G-Sync. Puertos HDMI 2.0 y DisplayPort 1.4. Soporte ajustable en altura e inclinacion.",
+      "price": {
+        "amount": 189990,
+        "currency": "ARS"
+      },
+      "category_path": "Computacion > Monitores > Gaming",
+      "attributes": {
+        "marca": "ViewPro",
+        "tamano_pantalla": "27 pulgadas",
+        "resolucion": "1920x1080 (Full HD)",
+        "tipo_panel": "IPS",
+        "tasa_refresco": "144Hz",
+        "tiempo_respuesta": "1ms",
+        "sync": "FreeSync / G-Sync Compatible",
+        "puertos": "2x HDMI, 1x DisplayPort, Audio Out"
+      },
+      "tags": ["monitor", "gaming", "144hz", "27 pulgadas", "ips", "gamer", "freesync"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": false
+      },
+      "seo_score": 96
+    },
+    {
+      "id": "PL-004",
+      "title": "Silla Gamer Ergonomica Reclinable - Soporte Lumbar Ajustable",
+      "description": "Silla gamer profesional con diseno ergonomico para largas sesiones. Respaldo reclinable hasta 180 grados, reposabrazos 4D ajustables, soporte lumbar y almohada cervical incluidos. Base de metal resistente con ruedas de nylon silenciosas. Capacidad maxima 150kg. Tapizado premium en cuero sintetico.",
+      "price": {
+        "amount": 125000,
+        "currency": "ARS"
+      },
+      "category_path": "Hogar > Muebles > Sillas > Gaming",
+      "attributes": {
+        "marca": "ProSeat",
+        "modelo": "GX-500",
+        "material": "Cuero sintetico PU",
+        "reclinable": "Si, hasta 180 grados",
+        "reposabrazos": "4D ajustables",
+        "capacidad_max": "150 kg",
+        "base": "Metal con ruedas nylon",
+        "color": "Negro/Rojo"
+      },
+      "tags": ["silla", "gamer", "ergonomica", "reclinable", "oficina", "gaming", "escritorio"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 93
+    },
+    {
+      "id": "PL-005",
+      "title": "Webcam Full HD 1080p con Microfono - Streaming y Videollamadas",
+      "description": "Webcam profesional Full HD 1080p a 30fps con microfono estereo incorporado y reduccion de ruido. Enfoque automatico, correccion de luz automatica. Clip universal compatible con monitores y tripodes. Ideal para Zoom, Teams, streaming en Twitch/YouTube. Plug & play sin drivers.",
+      "price": {
+        "amount": 18990,
+        "currency": "ARS"
+      },
+      "category_path": "Computacion > Perifericos > Camaras Web",
+      "attributes": {
+        "marca": "StreamCam",
+        "resolucion": "1080p Full HD",
+        "fps": "30 fps",
+        "microfono": "Estereo con reduccion de ruido",
+        "enfoque": "Automatico",
+        "conexion": "USB 2.0",
+        "compatible": "Windows, Mac, Linux, Chrome OS"
+      },
+      "tags": ["webcam", "1080p", "streaming", "zoom", "videollamada", "microfono", "home office"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 89
+    },
+    {
+      "id": "PL-006",
+      "title": "Mouse Gamer Optico 12000 DPI RGB - 7 Botones Programables",
+      "description": "Mouse gaming de alta precision con sensor optico de 12000 DPI ajustables. 7 botones programables con software de configuracion. Iluminacion RGB con efectos personalizables. Diseno ergonomico para diestros, cable trenzado de 1.8m. Perfecto para FPS, MOBA y uso diario.",
+      "price": {
+        "amount": 12500,
+        "currency": "ARS"
+      },
+      "category_path": "Computacion > Perifericos > Mouses > Gaming",
+      "attributes": {
+        "marca": "GameForce",
+        "sensor": "Optico 12000 DPI",
+        "botones": "7 programables",
+        "iluminacion": "RGB",
+        "polling_rate": "1000Hz",
+        "peso": "95g",
+        "cable": "Trenzado 1.8m"
+      },
+      "tags": ["mouse", "gamer", "gaming", "rgb", "12000dpi", "optico", "pc"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 90
+    },
+    {
+      "id": "PL-007",
+      "title": "Hub USB-C 7 en 1 - HDMI 4K, USB 3.0, SD Card, PD 100W",
+      "description": "Hub USB-C multipuerto todo en uno: HDMI 4K@60Hz, 2x USB 3.0, 1x USB-C PD 100W, lector SD y microSD, Ethernet Gigabit. Compatible con MacBook Pro/Air, iPad Pro, notebooks Windows y tablets. Carcasa de aluminio con disipacion de calor. Plug & play.",
+      "price": {
+        "amount": 28900,
+        "currency": "ARS"
+      },
+      "category_path": "Computacion > Conectividad > Hubs y Docks",
+      "attributes": {
+        "marca": "ConnectPro",
+        "puertos": "HDMI, 2x USB 3.0, USB-C PD, SD, microSD, Ethernet",
+        "hdmi_max": "4K@60Hz",
+        "power_delivery": "100W passthrough",
+        "material": "Aluminio",
+        "compatible": "USB-C / Thunderbolt 3/4"
+      },
+      "tags": ["hub", "usb-c", "hdmi", "macbook", "adaptador", "dock", "multipuerto"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 92
+    },
+    {
+      "id": "PL-008",
+      "title": "Disco SSD 1TB NVMe M.2 - Velocidad 3500MB/s Lectura",
+      "description": "Disco solido SSD NVMe M.2 2280 de 1TB con velocidades de lectura hasta 3500MB/s y escritura 3000MB/s. Tecnologia 3D NAND TLC para mayor durabilidad. Compatible con PC, PS5 y notebooks. Incluye software de clonacion. Garantia 5 anos.",
+      "price": {
+        "amount": 75000,
+        "currency": "ARS"
+      },
+      "category_path": "Computacion > Almacenamiento > Discos SSD > NVMe",
+      "attributes": {
+        "marca": "SpeedDrive",
+        "capacidad": "1TB",
+        "interfaz": "NVMe PCIe Gen3 x4",
+        "factor_forma": "M.2 2280",
+        "lectura_max": "3500 MB/s",
+        "escritura_max": "3000 MB/s",
+        "tbw": "600 TBW",
+        "garantia": "5 anos"
+      },
+      "tags": ["ssd", "nvme", "1tb", "m.2", "disco", "almacenamiento", "ps5"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 95
+    },
+    {
+      "id": "PL-009",
+      "title": "Aro de Luz LED 10 Pulgadas con Tripode - Streaming y Fotografia",
+      "description": "Aro de luz LED de 10 pulgadas con tripode ajustable hasta 1.6m de altura. 3 modos de luz (calida, neutra, fria) con 10 niveles de intensidad. Soporte para celular giratorio 360 grados. Control remoto Bluetooth incluido. Ideal para TikTok, YouTube, Zoom y fotografia de productos.",
+      "price": {
+        "amount": 14500,
+        "currency": "ARS"
+      },
+      "category_path": "Camaras y Accesorios > Iluminacion > Aros de Luz",
+      "attributes": {
+        "marca": "LightPro",
+        "tamano": "10 pulgadas (26cm)",
+        "modos_luz": "3 (calida, neutra, fria)",
+        "niveles_brillo": "10",
+        "altura_tripode": "50cm - 160cm",
+        "control": "Remoto Bluetooth + manual",
+        "alimentacion": "USB 5V"
+      },
+      "tags": ["aro de luz", "ring light", "streaming", "tiktok", "youtube", "tripode", "fotografia"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 88
+    },
+    {
+      "id": "PL-010",
+      "title": "Microfono Condensador USB Profesional - Podcast y Streaming",
+      "description": "Microfono condensador USB cardioide para grabacion profesional. Frecuencia 20Hz-20kHz, sensibilidad -34dB. Incluye soporte de escritorio ajustable, filtro anti-pop y cable USB de 2m. Compatible con Windows, Mac, PS4/PS5. Ideal para podcasts, streaming, voiceover y home studio.",
+      "price": {
+        "amount": 32000,
+        "currency": "ARS"
+      },
+      "category_path": "Electronica > Audio > Microfonos > USB",
+      "attributes": {
+        "marca": "AudioPro",
+        "tipo": "Condensador",
+        "patron_polar": "Cardioide",
+        "frecuencia": "20Hz - 20kHz",
+        "conexion": "USB Plug & Play",
+        "incluye": "Soporte, filtro anti-pop, cable USB",
+        "compatible": "Windows, Mac, PS4, PS5"
+      },
+      "tags": ["microfono", "condensador", "usb", "podcast", "streaming", "youtube", "grabacion"],
+      "shipping": {
+        "free_shipping": true,
+        "shipping_mode": "mercado_envios",
+        "local_pickup": true
+      },
+      "seo_score": 91
+    }
+  ],
+  "import_instructions": {
+    "mercadolibre_api": "Use POST /items endpoint with listing data",
+    "csv_export": "Available on request",
+    "bulk_upload": "Compatible with MercadoLibre seller tools"
+  }
+}

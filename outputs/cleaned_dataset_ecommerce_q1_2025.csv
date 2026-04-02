@@ -1,0 +1,26 @@
+transaction_id,customer_id,product_name,category,quantity,unit_price,total_amount,payment_method,order_date,shipping_country
+txn_001,cust_1042,wireless bluetooth headphones,electronics,2,49.99,99.98,credit_card,2025-01-15,united states
+txn_002,cust_2891,ergonomic office chair,furniture,1,299.00,299.00,paypal,2025-01-16,canada
+txn_003,cust_0847,python programming book,books,3,34.99,104.97,credit_card,2025-01-17,united kingdom
+txn_004,cust_1523,mechanical keyboard rgb,electronics,1,129.99,129.99,debit_card,2025-01-18,germany
+txn_005,cust_3201,standing desk converter,furniture,1,189.00,189.00,credit_card,2025-01-19,united states
+txn_006,cust_0092,data science handbook,books,2,45.00,90.00,paypal,2025-01-20,australia
+txn_007,cust_4521,usb-c hub multiport,electronics,4,29.99,119.96,credit_card,2025-01-21,united states
+txn_008,cust_1847,laptop cooling pad,electronics,1,39.99,39.99,debit_card,2025-01-22,canada
+txn_009,cust_2103,desk organizer set,furniture,2,24.99,49.98,credit_card,2025-01-23,united states
+txn_010,cust_0934,machine learning fundamentals,books,1,59.99,59.99,paypal,2025-01-24,netherlands
+txn_011,cust_5621,noise canceling earbuds,electronics,1,79.99,79.99,credit_card,2025-01-25,france
+txn_012,cust_1298,adjustable monitor arm,furniture,2,89.00,178.00,debit_card,2025-01-26,united states
+txn_013,cust_3847,web development guide,books,1,42.50,42.50,credit_card,2025-01-27,spain
+txn_014,cust_0471,portable ssd 1tb,electronics,1,109.99,109.99,paypal,2025-01-28,united states
+txn_015,cust_2934,ergonomic mouse wireless,electronics,3,34.99,104.97,credit_card,2025-01-29,canada
+txn_016,cust_1672,file cabinet 3-drawer,furniture,1,149.00,149.00,debit_card,2025-01-30,united states
+txn_017,cust_4102,api design patterns,books,2,38.99,77.98,credit_card,2025-01-31,germany
+txn_018,cust_0823,webcam hd 1080p,electronics,1,59.99,59.99,paypal,2025-02-01,united kingdom
+txn_019,cust_3156,desk lamp led,furniture,2,32.00,64.00,credit_card,2025-02-02,united states
+txn_020,cust_1945,cloud computing essentials,books,1,54.99,54.99,debit_card,2025-02-03,australia
+txn_021,cust_2687,smart power strip,electronics,2,27.99,55.98,credit_card,2025-02-04,united states
+txn_022,cust_0156,mesh office chair,furniture,1,259.00,259.00,paypal,2025-02-05,canada
+txn_023,cust_4893,devops handbook,books,1,48.00,48.00,credit_card,2025-02-06,united states
+txn_024,cust_1034,wireless charging pad,electronics,3,19.99,59.97,debit_card,2025-02-07,france
+txn_025,cust_3421,keyboard wrist rest,furniture,2,18.99,37.98,credit_card,2025-02-08,united states

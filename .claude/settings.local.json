@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 3 python:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "WebSearch",
+      "WebFetch(domain:app.gumroad.com)",
+      "WebFetch(domain:gumroad.com)",
+      "WebFetch(domain:nocodeapi.com)",
+      "WebFetch(domain:help.gumroad.com)",
+      "WebFetch(domain:rollout.com)",
+      "WebFetch(domain:www.postman.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.lemonsqueezy.com)",
+      "Skill(claude-developer-platform)",
+      "Bash(rm:*)",
+      "WebFetch(domain:payhip.com)",
+      "WebFetch(domain:help.payhip.com)",
+      "Bash(findstr:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:www.mintlify.com)",
+      "Bash(dir:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: eliminar duplicados en traffic_queue, agregar rotación con estado pending/published y archivo traffic_archive\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git config:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(ls:*)"
+    ]
+  }
+}

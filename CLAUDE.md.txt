@@ -1,0 +1,77 @@
+# GRANJA DE IAs — multi_farm_system
+
+## Arquitectura
+Sistema evolutivo competitivo con múltiples granjas de agentes que generan ingresos reales.
+Documento de referencia: GRANJA_DE_IAs_v2 (arquitectura v2.0)
+
+## Stack
+- Python 3.11+
+- SQLite (observatory/memory)
+- Claude API claude-sonnet-4-20250514 (mutación de estrategias)
+- Rich (dashboard terminal)
+
+## Estructura de carpetas objetivo
+```
+/multi_farm_system
+  main.py
+  config.py
+  /core
+    economy.py
+    competition.py
+    evolution.py
+    supervisor.py
+  /farms
+    base_farm.py
+    /data_cleaning
+      farm.py
+      producer_agent.py
+      seller_agent.py
+      task_executor.py
+      revenue_bridge.py
+    /auto_reports
+    /product_listing
+    /monetized_content
+  /observatory
+    dashboard.py
+    memory.py
+    logger.py
+  /mutation
+    claude_mutator.py
+    strategy_schema.py
+  /shared
+    models.py
+    utils.py
+```
+
+## Comandos
+- `python main.py` — arranca el loop global
+- `python -m pytest tests/` — corre tests
+
+## Convenciones
+- Dataclasses para todos los modelos (models.py)
+- Estrategias siempre como dict JSON-serializable
+- Circuit breaker OBLIGATORIO antes de cualquier llamada API externa
+- Logging estructurado en cada acción económica
+- Sin valores hardcodeados — todo en config.py
+- Variables de entorno para API keys, nunca en código
+
+## Bloques de construcción (en orden estricto)
+1. Scaffold + Core Economy ← EMPEZAMOS ACÁ
+2. Motor Competencia
+3. Granja 1 Producción (Data Cleaning)
+4. SellerAgent Base
+5. Revenue Bridge Gumroad
+6. Eliminación + Reproducción
+7. Mutación Claude API
+8. Observatory
+9. Supervisor Global
+10. Granjas 2, 3, 4
+
+## Restricciones críticas
+- NO avanzar al siguiente bloque sin verificar el actual funcionando
+- NO gastar más de $2 USD/ciclo en llamadas API (CostCircuitBreaker)
+- Cada muerte de agente es permanente, sin recuperación
+```
+
+---
+
