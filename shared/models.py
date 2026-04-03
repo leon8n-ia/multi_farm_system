@@ -12,6 +12,7 @@ class FarmType(Enum):
     CROP = "crop"
     LIVESTOCK = "livestock"
     MIXED = "mixed"
+    REACT_NEXTJS = "react_nextjs"
 
 
 @dataclass
