@@ -1,6 +1,6 @@
 import logging
 
-from config import DEVOPS_CLOUD_FARM_ACTIVE, MOBILE_DEV_FARM_ACTIVE, INITIAL_CREDITS
+from config import REACT_NEXTJS_FARM_ACTIVE, DEVOPS_CLOUD_FARM_ACTIVE, MOBILE_DEV_FARM_ACTIVE, INITIAL_CREDITS
 from farms.base_farm import BaseFarm
 
 logger = logging.getLogger(__name__)
@@ -21,6 +21,7 @@ class FarmFactory:
         from farms.mobile_dev.farm import MobileDevFarm
         from farms.monetized_content.farm import MonetizedContentFarm
         from farms.product_listing.farm import ProductListingFarm
+        from farms.react_nextjs.farm import ReactNextjsFarm
         from farms.traffic.farm import TrafficFarm
         from shared.models import Agent
 
@@ -76,6 +77,18 @@ class FarmFactory:
                 niches=list(farm.niches),
             )
             ProducerCls = ProducerAgent
+
+        elif REACT_NEXTJS_FARM_ACTIVE and isinstance(farm, ReactNextjsFarm):
+            new_farm = ReactNextjsFarm(
+                id=new_id, name=new_name,
+                capital=farm.capital, credits=float(INITIAL_CREDITS),
+            )
+            # ReactNextjsFarm initializes its own agents, return early
+            logger.info(
+                "[FarmFactory] Created %s from %s (ReactNextjsFarm — 3 producers)",
+                new_id, farm.id,
+            )
+            return new_farm
 
         elif DEVOPS_CLOUD_FARM_ACTIVE and isinstance(farm, DevOpsCloudFarm):
             from farms.devops_cloud.producer_agent_1 import DockerAgent

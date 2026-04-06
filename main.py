@@ -3,7 +3,7 @@ import time
 
 from rich.console import Console
 
-from config import CYCLE_INTERVAL_SECONDS, DEVOPS_CLOUD_FARM_ACTIVE, MOBILE_DEV_FARM_ACTIVE, INITIAL_CREDITS
+from config import CYCLE_INTERVAL_SECONDS, REACT_NEXTJS_FARM_ACTIVE, DEVOPS_CLOUD_FARM_ACTIVE, MOBILE_DEV_FARM_ACTIVE, INITIAL_CREDITS
 from core.supervisor import GlobalSupervisor
 from farms.auto_reports.farm import AutoReportsFarm
 from farms.auto_reports.producer_agent import ProducerAgent as ARProducer
@@ -16,6 +16,8 @@ from farms.product_listing.farm import ProductListingFarm
 from farms.product_listing.producer_agent import ProducerAgent as PLProducer
 from farms.traffic.farm import TrafficFarm
 
+if REACT_NEXTJS_FARM_ACTIVE:
+    from farms.react_nextjs.farm import ReactNextjsFarm
 if DEVOPS_CLOUD_FARM_ACTIVE:
     from farms.devops_cloud.farm import DevOpsCloudFarm
 if MOBILE_DEV_FARM_ACTIVE:
@@ -111,6 +113,15 @@ def _build_traffic_farm() -> TrafficFarm:
     )
 
 
+def _build_react_nextjs_farm() -> "ReactNextjsFarm":
+    return ReactNextjsFarm(
+        id="react-farm-1",
+        name="React/Next.js #1",
+        capital=1000.0,
+        credits=500.0,
+    )
+
+
 def _build_devops_cloud_farm() -> "DevOpsCloudFarm":
     return DevOpsCloudFarm(
         id="devops-farm-1",
@@ -137,6 +148,8 @@ def build_farms() -> list[BaseFarm]:
         _build_mc_farm(),
         _build_traffic_farm(),
     ]
+    if REACT_NEXTJS_FARM_ACTIVE:
+        farms.append(_build_react_nextjs_farm())
     if DEVOPS_CLOUD_FARM_ACTIVE:
         farms.append(_build_devops_cloud_farm())
     if MOBILE_DEV_FARM_ACTIVE:
