@@ -39,10 +39,16 @@ GUMROAD_ENABLED = True           # Activado — token configurado en variable de
 LEMONSQUEEZY_ENABLED = False     # DESHABILITADO PERMANENTEMENTE — no usar esta plataforma
 GOOGLE_DRIVE_ENABLED = False     # Desactivado — requiere GOOGLE_DRIVE_CREDENTIALS_JSON
 
+# Farm activation flags
+DEVOPS_CLOUD_FARM_ACTIVE = True
+MOBILE_DEV_FARM_ACTIVE = True
+
 # Google Drive folder IDs by farm type
 GOOGLE_DRIVE_FOLDER_IDS: dict[str, str] = {
     "data_cleaning": "1qjVs8bQ6XzuSzuMin1fvR82wA-7NZza9",
     "auto_reports": "1tcd4KREz_ABMzORmg_a9s5BXvuZHsjxD",
     "product_listing": "1P7SCGJ0m8J-wLg678eZWkvYfcm5y5v7g",
     "monetized_content": "1GO03fu8aM0nXNYxNBOSFb4ESkWwgidcg",
+    "devops_cloud": "1A69s783nK31hGAqtjb8yoqoHKU-kG1Ic",
+    "mobile_dev": "1o9Xx3yA2E6v_rcucaG14mIuXM_r-R9Ub",
 }

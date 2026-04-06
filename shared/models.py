@@ -14,6 +14,7 @@ class FarmType(Enum):
     MIXED = "mixed"
     REACT_NEXTJS = "react_nextjs"
     DEVOPS_CLOUD = "devops_cloud"
+    MOBILE_DEV = "mobile_dev"
 
 
 @dataclass
