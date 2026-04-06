@@ -1,21 +1,21 @@
-"""Mobile Dev Seller Agent — specialized seller for mobile development resources."""
+"""DevOps Cloud Seller Agent — specialized seller for DevOps cheat sheets."""
 
 from farms.seller_agent import SellerAgent as BaseSellerAgent
 
 DEFAULT_STRATEGY: dict = {
     "primary_channel": "google_drive",
     "pricing_model": "fixed",
-    "base_price": 34.0,
+    "base_price": 24.0,
     "discount_threshold": 3,
     "discount_rate": 0.1,
     "listing_quality": 0.85,
-    "target_audience": "mobile developers",
+    "target_audience": "DevOps engineers",
     "bundle_strategy": False,
 }
 
 
-class MobileDevSellerAgent(BaseSellerAgent):
-    """Seller agent specialized in mobile dev resource distribution via Google Drive."""
+class DevOpsSellerAgent(BaseSellerAgent):
+    """Seller agent specialized in DevOps cheat sheet distribution via Google Drive."""
 
     def __init__(self, farm_id: str, strategy: dict | None = None) -> None:
         merged_strategy = dict(DEFAULT_STRATEGY)

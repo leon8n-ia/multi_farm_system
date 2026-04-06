@@ -3,7 +3,7 @@ import time
 
 from rich.console import Console
 
-from config import CYCLE_INTERVAL_SECONDS, INITIAL_CREDITS
+from config import CYCLE_INTERVAL_SECONDS, DEVOPS_CLOUD_FARM_ACTIVE, MOBILE_DEV_FARM_ACTIVE, INITIAL_CREDITS
 from core.supervisor import GlobalSupervisor
 from farms.auto_reports.farm import AutoReportsFarm
 from farms.auto_reports.producer_agent import ProducerAgent as ARProducer
@@ -15,6 +15,11 @@ from farms.monetized_content.producer_agent import ProducerAgent as MCProducer
 from farms.product_listing.farm import ProductListingFarm
 from farms.product_listing.producer_agent import ProducerAgent as PLProducer
 from farms.traffic.farm import TrafficFarm
+
+if DEVOPS_CLOUD_FARM_ACTIVE:
+    from farms.devops_cloud.farm import DevOpsCloudFarm
+if MOBILE_DEV_FARM_ACTIVE:
+    from farms.mobile_dev.farm import MobileDevFarm
 from observatory.dashboard import Dashboard
 from observatory.logger import log_economic_event
 from observatory.memory import Memory
@@ -106,14 +111,37 @@ def _build_traffic_farm() -> TrafficFarm:
     )
 
 
+def _build_devops_cloud_farm() -> "DevOpsCloudFarm":
+    return DevOpsCloudFarm(
+        id="devops-farm-1",
+        name="DevOps Cloud #1",
+        capital=1000.0,
+        credits=500.0,
+    )
+
+
+def _build_mobile_dev_farm() -> "MobileDevFarm":
+    return MobileDevFarm(
+        id="mobile-farm-1",
+        name="Mobile Dev #1",
+        capital=1000.0,
+        credits=500.0,
+    )
+
+
 def build_farms() -> list[BaseFarm]:
-    return [
+    farms = [
         _build_dc_farm(),
         _build_ar_farm(),
         _build_pl_farm(),
         _build_mc_farm(),
         _build_traffic_farm(),
     ]
+    if DEVOPS_CLOUD_FARM_ACTIVE:
+        farms.append(_build_devops_cloud_farm())
+    if MOBILE_DEV_FARM_ACTIVE:
+        farms.append(_build_mobile_dev_farm())
+    return farms
 
 
 # ---------------------------------------------------------------------------
