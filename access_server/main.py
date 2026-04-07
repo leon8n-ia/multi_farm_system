@@ -34,6 +34,18 @@ SECRET_KEY = os.getenv("SECRET_KEY", "")
 SELF_URL = os.getenv("SELF_URL", "http://localhost:8000")
 PING_INTERVAL_SECONDS = 300  # 5 minutes
 
+# Dodo Product ID to Farm Type mapping
+DEFAULT_DODO_PRODUCT_MAP = {
+    "pdt_0NcCKncWZl6oDekJpv4tA": "data_cleaning",
+    "pdt_0NcCMQENFmyGx6Xm9FKJQ": "auto_reports",
+    "pdt_0NcCOy6cUf8AcLvWYzAxF": "product_listing",
+    "pdt_0NcCPsEPr8gorZXNZBDJz": "monetized_content",
+    "pdt_0NcCQqoSUsK5laXLdaWXX": "react_nextjs",
+    "pdt_0NcCRa16qmakkjcukuT0B": "devops_cloud",
+    "pdt_0NcCSCR94KtfQU0HptlG7": "mobile_dev"
+}
+DODO_PRODUCT_MAP = json.loads(os.getenv("DODO_PRODUCT_MAP", json.dumps(DEFAULT_DODO_PRODUCT_MAP)))
+
 
 async def self_ping_task():
     """Background task to ping /health every 5 minutes to prevent Render sleep."""
@@ -92,6 +104,11 @@ def get_drive_link(farm_type: str) -> Optional[str]:
     if folder_id:
         return f"https://drive.google.com/drive/folders/{folder_id}"
     return None
+
+
+def get_farm_type_from_product(product_id: str) -> str:
+    """Get farm type from Dodo product ID."""
+    return DODO_PRODUCT_MAP.get(product_id, "default")
 
 
 @app.get("/health")
@@ -170,7 +187,11 @@ async def dodo_webhook(request: Request):
         # Create new subscription with access token
         subscription_id = data.get("subscription_id")
         email = data.get("customer", {}).get("email", "")
-        farm_type = data.get("metadata", {}).get("farm_type", "default")
+        product_id = data.get("product_id", "")
+        # Get farm_type from product_id, fallback to metadata, then default
+        farm_type = get_farm_type_from_product(product_id)
+        if farm_type == "default":
+            farm_type = data.get("metadata", {}).get("farm_type", "default")
         expires_at = data.get("current_period_end")
 
         # Check if subscription already exists
