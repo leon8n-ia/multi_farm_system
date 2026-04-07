@@ -29,8 +29,19 @@ load_dotenv()
 
 # Environment variables
 DODO_PAYMENTS_API_KEY = os.getenv("DODO_PAYMENTS_API_KEY", "")
-GOOGLE_DRIVE_FOLDER_IDS = json.loads(os.getenv("GOOGLE_DRIVE_FOLDER_IDS", "{}"))
 SECRET_KEY = os.getenv("SECRET_KEY", "")
+
+# Google Drive folder IDs for each farm type
+DEFAULT_GOOGLE_DRIVE_FOLDER_IDS = {
+    "data_cleaning": "1qjVs8bQ6XzuSzuMin1fvR82wA-7NZza9",
+    "auto_reports": "1tcd4KREz_ABMzORmg_a9s5BXvuZHsjxD",
+    "product_listing": "1P7SCGJ0m8J-wLg678eZWkvYfcm5y5v7g",
+    "monetized_content": "1GO03fu8aM0nXNYxNBOSFb4ESkWwgidcg",
+    "react_nextjs": "19kIvsTU7O7ReSGrBOaAoBIkZ3OZmXXwL",
+    "devops_cloud": "1A69s783nK31hGAqtjb8yoqoHKU-kG1Ic",
+    "mobile_dev": "1o9Xx3yA2E6v_rcucaG14mIuXM_r-R9Ub"
+}
+GOOGLE_DRIVE_FOLDER_IDS = json.loads(os.getenv("GOOGLE_DRIVE_FOLDER_IDS", json.dumps(DEFAULT_GOOGLE_DRIVE_FOLDER_IDS)))
 SELF_URL = os.getenv("SELF_URL", "http://localhost:8000")
 PING_INTERVAL_SECONDS = 300  # 5 minutes
 
