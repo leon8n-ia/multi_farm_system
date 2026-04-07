@@ -31,6 +31,9 @@ DRIVE_FOLDER_IDS: dict[str, str] = {
     "auto_reports": "1tcd4KREz_ABMzORmg_a9s5BXvuZHsjxD",
     "product_listing": "1P7SCGJ0m8J-wLg678eZWkvYfcm5y5v7g",
     "monetized_content": "1GO03fu8aM0nXNYxNBOSFb4ESkWwgidcg",
+    "react_nextjs": "19kIvsTU7O7ReSGrBOaAoBIkZ3OZmXXwL",
+    "devops_cloud": "1A69s783nK31hGAqtjb8yoqoHKU-kG1Ic",
+    "mobile_dev": "1o9Xx3yA2E6v_rcucaG14mIuXM_r-R9Ub",
 }
 
 # Public folder links
@@ -52,13 +55,29 @@ class GoogleDriveBridge:
 
     Args:
         credentials_json: Service account credentials as JSON string;
-                          falls back to GOOGLE_DRIVE_CREDENTIALS_JSON env var.
+                          falls back to GOOGLE_DRIVE_CREDENTIALS_JSON env var
+                          or a local credentials file.
     """
 
     def __init__(self, credentials_json: str | None = None) -> None:
         self._credentials_json = credentials_json or os.environ.get(
             "GOOGLE_DRIVE_CREDENTIALS_JSON"
         )
+        # Fallback: try to read from local credentials file
+        if not self._credentials_json:
+            # Try multiple paths for the credentials file
+            possible_paths = [
+                Path("multifarm-system-5452ce63eaef.json"),  # CWD
+                Path(__file__).parent.parent.parent / "multifarm-system-5452ce63eaef.json",  # Relative to module
+            ]
+            for creds_file in possible_paths:
+                if creds_file.exists():
+                    try:
+                        self._credentials_json = creds_file.read_text(encoding="utf-8")
+                        logger.info("[GoogleDrive] Loaded credentials from %s", creds_file.resolve())
+                        break
+                    except Exception as exc:
+                        logger.warning("[GoogleDrive] Failed to read %s: %s", creds_file, exc)
         self._enabled = os.environ.get("GOOGLE_DRIVE_ENABLED", "true").lower() == "true"
         self._simulation = not (self._enabled and self._credentials_json)
         self._service: Any = None

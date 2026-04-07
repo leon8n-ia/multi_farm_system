@@ -189,3 +189,47 @@ class RevenueBridgeRouter:
         except Exception as exc:
             logger.warning("[Router] delete_from_drive error: %s", exc)
             return False
+
+    def upload_product_to_drive(self, product: dict, file_name: str) -> dict:
+        """Upload a product dictionary as a JSON file to Google Drive.
+
+        Args:
+            product: Product dictionary to upload.
+            file_name: Name for the file in Drive (e.g. "product_2024-01-15.json").
+
+        Returns:
+            dict with upload result (file_id, web_view_link, etc.)
+        """
+        import json
+        import tempfile
+        import os
+
+        if not self._farm_type:
+            logger.warning("[Router] upload_product_to_drive: farm_type not set")
+            return {"file_id": None, "error": "farm_type not configured", "simulation": True}
+
+        if not self._drive_bridge:
+            logger.info("[Router] upload_product_to_drive: Google Drive disabled, skipping")
+            return {"file_id": None, "skipped": True, "simulation": True}
+
+        # Write product to temp file
+        try:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
+                json.dump(product, f, indent=2, ensure_ascii=False)
+                temp_path = f.name
+
+            # Upload to Drive
+            result = self.upload_to_drive(temp_path, file_name)
+            logger.info("[Router] upload_product_to_drive: %s -> %s", file_name, result.get("file_id"))
+            return result
+
+        except Exception as exc:
+            logger.warning("[Router] upload_product_to_drive error: %s", exc)
+            return {"file_id": None, "error": str(exc), "simulation": True}
+
+        finally:
+            # Clean up temp file
+            try:
+                os.unlink(temp_path)
+            except Exception:
+                pass

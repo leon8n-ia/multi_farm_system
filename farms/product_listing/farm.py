@@ -1,6 +1,7 @@
 import copy
 import logging
 import random
+from datetime import datetime
 
 from config import COST_SELLER_LISTING, FARM_DEATH_THRESHOLD, GUMROAD_PRODUCT_IDS, INITIAL_CREDITS, REPRODUCTION_THRESHOLD
 from core.competition import run_competition as _run_competition
@@ -51,7 +52,7 @@ class ProductListingFarm(BaseFarm):
         self.revenue_bridge = RevenueBridgeRouter([
             LemonSqueezyRevenueBridge(),
             GumroadRevenueBridge(product_id=GUMROAD_PRODUCT_IDS["product_listing"]),
-        ])
+        ], farm_type="product_listing")
         self.product_type = "product_listing"
 
     def _current_product(self) -> str:
@@ -131,6 +132,9 @@ class ProductListingFarm(BaseFarm):
                     description=listing.get("description", ""),
                     price_usd=price,
                 )
+                # Upload to Google Drive
+                file_name = f"listing_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+                self.revenue_bridge.upload_product_to_drive(item, file_name)
             else:
                 items_expired += 1
                 self.seller_agent.sales_history.append({"sold": False, "price": 0.0})
