@@ -108,9 +108,10 @@ class DataCleaningFarm(BaseFarm):
                     description=listing.get("description", ""),
                     price_usd=price,
                 )
-                # Upload to Google Drive
+                # Upload to storage (convert DataFrame to dict if needed)
                 file_name = f"dataset_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
-                self.revenue_bridge.upload_product_to_drive(item, file_name)
+                item_data = item.to_dict(orient="records") if hasattr(item, "to_dict") else item
+                self.revenue_bridge.upload_product_to_drive({"data": item_data, "listing": listing}, file_name)
             else:
                 items_expired += 1
                 self.seller_agent.sales_history.append({"sold": False, "price": 0.0})
