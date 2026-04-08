@@ -20,6 +20,28 @@ STRING_CHOICES: dict[str, list[str]] = {
     "target_audience": ["developers", "data_scientists", "analysts", "businesses"],
 }
 
+# Evolutionary bias towards high-value digital products for developers (2026)
+NICHE_EVOLUTION_BIAS = """
+El sistema está evolucionando hacia productos digitales
+para desarrolladores. Productos de mayor valor en 2026:
+- Boilerplates AI-ready para React/Next.js con configs
+  para Claude/Cursor
+- Prompt packs de 200-1200 prompts para Cursor, Copilot, Claude
+- Workflow bundles CI/CD con prompts
+- Cheat sheets técnicos Docker/AWS/K8s actualizados 2026
+- Notion templates para dev teams
+- Starter kits mobile AI-ready
+
+Precio objetivo: $19-49 USD.
+Audiencia: developers que usan Cursor, Claude Code, Copilot.
+
+Si el agente puede derivar su output actual hacia alguno
+de estos productos manteniendo coherencia con su granja,
+priorizalo en la nueva estrategia.
+Si no puede derivar (ej: granja de tráfico),
+ignorá este contexto.
+"""
+
 
 # ---------------------------------------------------------------------------
 # Circuit breaker
@@ -88,7 +110,9 @@ def _call_claude_api(agent: Agent, farm_context: dict, api_key: str) -> dict:
     history = farm_context.get("history", [])[-5:]
     context_without_history = {k: v for k, v in farm_context.items() if k != "history"}
 
+    # Evolutionary bias prepended to guide mutations toward high-value products
     prompt = (
+        f"{NICHE_EVOLUTION_BIAS}\n\n"
         f"Agent strategy:\n{json.dumps(agent.strategy, indent=2)}\n\n"
         f"Recent performance (last 5 results):\n{json.dumps(history, indent=2)}\n\n"
         f"Farm context:\n{json.dumps(context_without_history, indent=2)}\n\n"
