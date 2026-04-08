@@ -371,16 +371,85 @@
             }
         }
 
-        /* Footer */
-        footer {
-            padding: 60px 24px;
-            border-top: 1px solid var(--border);
+        /* Access Info */
+        .access-info {
+            max-width: 700px;
+            margin: 40px auto 0;
+            text-align: center;
+            padding: 24px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+        }
+
+        .access-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* About Us Section */
+        .about-us {
+            padding: 80px 24px;
+            background: var(--bg-card);
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
             text-align: center;
         }
 
-        footer p {
+        .about-content p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .about-content strong {
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 24px 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-contact, .footer-legal {
+            text-align: left;
+        }
+
+        .footer-contact h4, .footer-legal h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .footer-contact p, .footer-legal p {
             color: var(--text-secondary);
             font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-bottom p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
         }
 
         footer a {
@@ -543,13 +612,43 @@
                     <p>Access fresh AI-generated content updated regularly.</p>
                 </div>
             </div>
+            <div class="access-info">
+                <p>After purchase, you'll receive a unique access link via email. Content updates automatically each cycle. Email support response within 48 hours.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about-us" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Us</h2>
+            </div>
+            <div class="about-content">
+                <p>Multi Farm System is a digital subscription service operated by <strong>Leonardo Novillo</strong>, Argentina. We deliver AI resources for developers: datasets, reports, prompt packs and tools — automatically updated each cycle by our AI farm system.</p>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2025 Multi Farm System. Built with <a href="https://github.com/leon8n-ia/multi_farm_system" target="_blank">AI agents</a>.</p>
+            <div class="footer-content">
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p>Email: <a href="mailto:leon8n.ia@gmail.com">leon8n.ia@gmail.com</a></p>
+                    <p>WhatsApp: <a href="https://wa.me/5493471314036">+54 9 3471 314036</a></p>
+                </div>
+                <div class="footer-legal">
+                    <h4>Legal</h4>
+                    <p><a href="terms.html">Terms & Conditions</a></p>
+                    <p><a href="privacy.html">Privacy Policy</a></p>
+                    <p><a href="refunds.html">Refund Policy</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Multi Farm System. Operated by Leonardo Novillo, Argentina. Built with <a href="https://github.com/leon8n-ia/multi_farm_system" target="_blank">AI agents</a>.</p>
+            </div>
         </div>
     </footer>
 
