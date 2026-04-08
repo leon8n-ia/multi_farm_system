@@ -1,5 +1,7 @@
-"""Reddit content agent: uses Claude API (Opus 4.6, adaptive thinking) to generate
-organic Reddit posts promoting data products.
+"""Reddit content agent: generates organic Reddit posts promoting farm products.
+
+Supports farm-specific content generation with appropriate subreddits,
+product descriptions, and Gumroad links per farm type.
 
 Falls back to simulation when ANTHROPIC_API_KEY is absent or the API call fails.
 """
@@ -10,6 +12,63 @@ import random
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Farm-specific configuration
+# ---------------------------------------------------------------------------
+
+FARM_CONFIG: dict[str, dict] = {
+    "data_cleaning": {
+        "subreddits": ["datasets", "MachineLearning"],
+        "gumroad_url": "https://leonix63.gumroad.com/l/fpwkdg",
+        "product_type": "cleaned dataset",
+        "niches": ["ecommerce", "fintech", "saas"],
+        "audience": "data scientists and ML engineers",
+    },
+    "auto_reports": {
+        "subreddits": ["datascience", "investing"],
+        "gumroad_url": "https://leonix63.gumroad.com/l/frhqhf",
+        "product_type": "automated financial report",
+        "niches": ["crypto", "saas metrics", "trading"],
+        "audience": "analysts and investors",
+    },
+    "product_listing": {
+        "subreddits": ["ecommerce", "Entrepreneur"],
+        "gumroad_url": "https://leonix63.gumroad.com/l/jzzsv",
+        "product_type": "optimized product listing",
+        "niches": ["mercadolibre", "amazon", "ecommerce"],
+        "audience": "ecommerce sellers",
+    },
+    "monetized_content": {
+        "subreddits": ["Python", "learnprogramming"],
+        "gumroad_url": "https://leonix63.gumroad.com/l/wnuah",
+        "product_type": "developer article pack",
+        "niches": ["python automation", "ai tools", "scripting"],
+        "audience": "developers learning automation",
+    },
+    "react_nextjs": {
+        "subreddits": ["reactjs", "webdev"],
+        "gumroad_url": "https://leon8n-ia.github.io/multi_farm_system/",
+        "product_type": "React/Next.js prompt pack",
+        "niches": ["cursor prompts", "claude prompts", "boilerplates"],
+        "audience": "React developers using AI tools",
+    },
+    "devops_cloud": {
+        "subreddits": ["devops", "aws"],
+        "gumroad_url": "https://leon8n-ia.github.io/multi_farm_system/",
+        "product_type": "DevOps cheat sheet",
+        "niches": ["docker", "aws", "kubernetes"],
+        "audience": "DevOps engineers and cloud architects",
+    },
+    "mobile_dev": {
+        "subreddits": ["reactnative", "FlutterDev"],
+        "gumroad_url": "https://leon8n-ia.github.io/multi_farm_system/",
+        "product_type": "mobile starter kit",
+        "niches": ["react native", "flutter", "mobile ai"],
+        "audience": "mobile developers using AI tools",
+    },
+}
+
+# Default subreddits (fallback)
 SUBREDDITS = [
     "datasets",
     "datascience",
@@ -20,16 +79,349 @@ SUBREDDITS = [
 _STYLES = [
     "recurso gratuito",
     "tip técnico",
-    "showcase de dataset",
+    "showcase de producto",
     "pregunta con respuesta",
 ]
 
+# ---------------------------------------------------------------------------
+# Farm-specific simulation posts
+# ---------------------------------------------------------------------------
+
+_SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
+    "data_cleaning": [
+        {
+            "title": "[Resource] Clean e-commerce dataset — 10k products, normalized and deduped",
+            "body": (
+                "Sharing a cleaned e-commerce dataset I prepared for ML projects:\n\n"
+                "- 10,000 product records\n"
+                "- Normalized category labels\n"
+                "- Price outliers removed (>3σ)\n"
+                "- Duplicate records deduplicated\n"
+                "- UTF-8 encoded, ready for pandas\n\n"
+                "Great baseline for recommendation systems or price-prediction models.\n\n"
+                "Download: https://leonix63.gumroad.com/l/fpwkdg"
+            ),
+            "subreddit": "datasets",
+            "score_estimado": 78,
+            "style": "recurso gratuito",
+        },
+        {
+            "title": "Cleaned fintech transaction dataset — 50k rows, fraud labels included",
+            "body": (
+                "For anyone working on fraud detection:\n\n"
+                "- 50,000 transaction records\n"
+                "- Binary fraud labels (verified)\n"
+                "- Normalized amounts and timestamps\n"
+                "- No PII, synthetic merchant IDs\n\n"
+                "Useful for training classifiers or benchmarking models.\n\n"
+                "Link: https://leonix63.gumroad.com/l/fpwkdg"
+            ),
+            "subreddit": "MachineLearning",
+            "score_estimado": 72,
+            "style": "showcase de producto",
+        },
+        {
+            "title": "SaaS metrics dataset — MRR, churn, LTV for 200 companies",
+            "body": (
+                "Cleaned dataset of SaaS metrics for benchmarking:\n\n"
+                "- 200 anonymized companies\n"
+                "- Monthly MRR, churn rate, CAC, LTV\n"
+                "- 24 months of data per company\n"
+                "- Outliers flagged, missing values imputed\n\n"
+                "Perfect for SaaS analytics projects.\n\n"
+                "Get it: https://leonix63.gumroad.com/l/fpwkdg"
+            ),
+            "subreddit": "datascience",
+            "score_estimado": 68,
+            "style": "tip técnico",
+        },
+    ],
+    "auto_reports": [
+        {
+            "title": "Automated crypto portfolio report — Python script + template",
+            "body": (
+                "Built an automated reporting system for crypto portfolios:\n\n"
+                "- Pulls data from CoinGecko API\n"
+                "- Calculates daily/weekly/monthly returns\n"
+                "- Generates PDF report with charts\n"
+                "- Includes risk metrics (Sharpe, volatility)\n\n"
+                "Template + script available for customization.\n\n"
+                "Check it out: https://leonix63.gumroad.com/l/frhqhf"
+            ),
+            "subreddit": "investing",
+            "score_estimado": 65,
+            "style": "showcase de producto",
+        },
+        {
+            "title": "SaaS metrics dashboard template — auto-updates from Stripe",
+            "body": (
+                "Sharing a reporting template I use for SaaS metrics:\n\n"
+                "- Connects to Stripe API\n"
+                "- Auto-calculates MRR, churn, LTV\n"
+                "- Weekly email reports\n"
+                "- Google Sheets + Python integration\n\n"
+                "Saves hours of manual reporting.\n\n"
+                "Template: https://leonix63.gumroad.com/l/frhqhf"
+            ),
+            "subreddit": "datascience",
+            "score_estimado": 71,
+            "style": "recurso gratuito",
+        },
+    ],
+    "product_listing": [
+        {
+            "title": "Optimized MercadoLibre listing templates — tested with 500+ products",
+            "body": (
+                "After A/B testing 500+ product listings on MercadoLibre:\n\n"
+                "**What works:**\n"
+                "- Title: brand + model + key feature + benefit\n"
+                "- 7-10 bullet points, front-loaded keywords\n"
+                "- Price ending in 9 or 7\n"
+                "- First image: product on white background\n\n"
+                "Templates with examples for each category.\n\n"
+                "Get them: https://leonix63.gumroad.com/l/jzzsv"
+            ),
+            "subreddit": "ecommerce",
+            "score_estimado": 74,
+            "style": "tip técnico",
+        },
+        {
+            "title": "E-commerce listing optimizer — AI-powered title and description generator",
+            "body": (
+                "Built a tool that optimizes product listings:\n\n"
+                "- Input: basic product info\n"
+                "- Output: SEO-optimized title, bullets, description\n"
+                "- Works for Amazon, MercadoLibre, Shopify\n"
+                "- Includes keyword research data\n\n"
+                "Increased CTR by 23% in our tests.\n\n"
+                "Try it: https://leonix63.gumroad.com/l/jzzsv"
+            ),
+            "subreddit": "Entrepreneur",
+            "score_estimado": 69,
+            "style": "showcase de producto",
+        },
+    ],
+    "monetized_content": [
+        {
+            "title": "Python automation scripts for developers — 50+ ready-to-use scripts",
+            "body": (
+                "Compiled my favorite Python automation scripts:\n\n"
+                "- File organization and renaming\n"
+                "- API data fetching and caching\n"
+                "- PDF/Excel report generation\n"
+                "- Slack/Discord notifications\n"
+                "- Database backup automation\n\n"
+                "All scripts documented with examples.\n\n"
+                "Collection: https://leonix63.gumroad.com/l/wnuah"
+            ),
+            "subreddit": "Python",
+            "score_estimado": 76,
+            "style": "recurso gratuito",
+        },
+        {
+            "title": "AI automation workflows — integrate Claude/GPT into your Python scripts",
+            "body": (
+                "Guide to adding AI to your automation:\n\n"
+                "- Claude API integration patterns\n"
+                "- GPT function calling examples\n"
+                "- Cost optimization strategies\n"
+                "- Error handling and retries\n"
+                "- Real-world use cases\n\n"
+                "Includes 20+ working code examples.\n\n"
+                "Get it: https://leonix63.gumroad.com/l/wnuah"
+            ),
+            "subreddit": "learnprogramming",
+            "score_estimado": 72,
+            "style": "tip técnico",
+        },
+    ],
+    "react_nextjs": [
+        {
+            "title": "200+ Cursor prompts for React/Next.js — tested and optimized",
+            "body": (
+                "Compiled my most effective Cursor prompts for React development:\n\n"
+                "- Component generation (50+ prompts)\n"
+                "- Hook patterns and custom hooks\n"
+                "- Next.js App Router patterns\n"
+                "- Testing with Vitest/RTL\n"
+                "- TypeScript type generation\n\n"
+                "Each prompt tested on real projects.\n\n"
+                "Get them: https://leon8n-ia.github.io/multi_farm_system/"
+            ),
+            "subreddit": "reactjs",
+            "score_estimado": 82,
+            "style": "recurso gratuito",
+        },
+        {
+            "title": "Next.js 14 boilerplate with Claude Code integration — AI-ready starter",
+            "body": (
+                "Built a Next.js starter optimized for AI-assisted development:\n\n"
+                "- App Router + TypeScript\n"
+                "- Tailwind + shadcn/ui\n"
+                "- Claude Code .cursorrules included\n"
+                "- Auth, DB, API routes pre-configured\n"
+                "- 100+ prompts for common tasks\n\n"
+                "Ship faster with AI.\n\n"
+                "Starter: https://leon8n-ia.github.io/multi_farm_system/"
+            ),
+            "subreddit": "webdev",
+            "score_estimado": 79,
+            "style": "showcase de producto",
+        },
+    ],
+    "devops_cloud": [
+        {
+            "title": "Docker cheat sheet 2026 — commands, Compose, best practices",
+            "body": (
+                "Updated Docker cheat sheet for 2026:\n\n"
+                "- Essential CLI commands\n"
+                "- Multi-stage build patterns\n"
+                "- Compose v2 examples\n"
+                "- Security best practices\n"
+                "- Debugging containers\n\n"
+                "PDF + Markdown versions included.\n\n"
+                "Download: https://leon8n-ia.github.io/multi_farm_system/"
+            ),
+            "subreddit": "devops",
+            "score_estimado": 85,
+            "style": "recurso gratuito",
+        },
+        {
+            "title": "AWS + Terraform cheat sheet — IaC patterns for production",
+            "body": (
+                "Compiled AWS/Terraform patterns I use daily:\n\n"
+                "- VPC, ECS, RDS modules\n"
+                "- IAM policy templates\n"
+                "- Cost optimization configs\n"
+                "- CI/CD with GitHub Actions\n"
+                "- Monitoring with CloudWatch\n\n"
+                "Battle-tested in production.\n\n"
+                "Get it: https://leon8n-ia.github.io/multi_farm_system/"
+            ),
+            "subreddit": "aws",
+            "score_estimado": 78,
+            "style": "tip técnico",
+        },
+        {
+            "title": "Kubernetes cheat sheet — kubectl, Helm, debugging",
+            "body": (
+                "K8s reference I keep open daily:\n\n"
+                "- kubectl commands by category\n"
+                "- Helm chart patterns\n"
+                "- Debugging pods and services\n"
+                "- Resource limits and requests\n"
+                "- RBAC quick reference\n\n"
+                "Print-friendly PDF.\n\n"
+                "Download: https://leon8n-ia.github.io/multi_farm_system/"
+            ),
+            "subreddit": "devops",
+            "score_estimado": 81,
+            "style": "showcase de producto",
+        },
+    ],
+    "mobile_dev": [
+        {
+            "title": "React Native AI starter kit — Claude + Expo + TypeScript",
+            "body": (
+                "Built a React Native starter for AI-powered apps:\n\n"
+                "- Expo SDK 52 + TypeScript\n"
+                "- Claude API integration\n"
+                "- Chat UI components\n"
+                "- Voice input support\n"
+                "- 50+ Cursor prompts included\n\n"
+                "Ship mobile AI apps faster.\n\n"
+                "Starter: https://leon8n-ia.github.io/multi_farm_system/"
+            ),
+            "subreddit": "reactnative",
+            "score_estimado": 77,
+            "style": "recurso gratuito",
+        },
+        {
+            "title": "Flutter AI toolkit — prompts and widgets for AI features",
+            "body": (
+                "Toolkit for adding AI to Flutter apps:\n\n"
+                "- Pre-built chat widgets\n"
+                "- OpenAI/Claude service classes\n"
+                "- Streaming response handling\n"
+                "- Offline caching patterns\n"
+                "- Cursor prompts for Flutter\n\n"
+                "Works with GPT-4 and Claude.\n\n"
+                "Get it: https://leon8n-ia.github.io/multi_farm_system/"
+            ),
+            "subreddit": "FlutterDev",
+            "score_estimado": 74,
+            "style": "showcase de producto",
+        },
+    ],
+}
+
+# Fallback generic posts
+_SIMULATION_POSTS_GENERIC = [
+    {
+        "title": "[Resource] Free cleaned dataset — ready for ML projects",
+        "body": (
+            "Sharing a cleaned dataset for the community:\n\n"
+            "- Normalized and deduplicated\n"
+            "- Missing values handled\n"
+            "- UTF-8 encoded\n\n"
+            "Great for learning and prototyping."
+        ),
+        "subreddit": "datascience",
+        "score_estimado": 65,
+        "style": "recurso gratuito",
+    },
+]
+
+# ---------------------------------------------------------------------------
+# Farm-specific simulation tweets
+# ---------------------------------------------------------------------------
+
+_SIMULATION_TWEETS_BY_FARM: dict[str, list[str]] = {
+    "data_cleaning": [
+        "Just released a clean e-commerce dataset: 10k products, normalized labels, outliers removed. Perfect for recommendation systems. #DataScience #MachineLearning",
+        "Fintech transaction data for fraud detection — 50k rows, clean and labeled. Link in bio. #ML #FraudDetection #datasets",
+    ],
+    "auto_reports": [
+        "Automated crypto portfolio reports with Python — pulls data, calculates metrics, generates PDF. Template available. #crypto #Python #automation",
+        "SaaS metrics dashboard that auto-updates from Stripe. MRR, churn, LTV calculated automatically. #SaaS #analytics",
+    ],
+    "product_listing": [
+        "A/B tested 500+ MercadoLibre listings. Key insight: titles with brand + model + benefit convert 23% better. #ecommerce #optimization",
+        "AI-powered listing optimizer for Amazon/MercadoLibre. Input product info, get SEO-optimized copy. #ecommerce #AI",
+    ],
+    "monetized_content": [
+        "50+ Python automation scripts: file org, API fetching, report generation, notifications. All documented. #Python #automation",
+        "Guide to integrating Claude/GPT into Python scripts. 20+ working examples included. #AI #Python #automation",
+    ],
+    "react_nextjs": [
+        "200+ Cursor prompts for React/Next.js development. Components, hooks, App Router patterns. All tested. #ReactJS #Cursor #AI",
+        "Next.js 14 boilerplate with Claude Code integration. Auth, DB, API pre-configured. Ship faster with AI. #NextJS #webdev",
+    ],
+    "devops_cloud": [
+        "Updated Docker cheat sheet for 2026: CLI commands, Compose v2, multi-stage builds, security best practices. #Docker #DevOps",
+        "AWS + Terraform patterns I use daily: VPC, ECS, RDS modules, CI/CD with GitHub Actions. Battle-tested. #AWS #Terraform",
+    ],
+    "mobile_dev": [
+        "React Native AI starter: Expo + TypeScript + Claude API integration. Chat UI, voice input, 50+ prompts. #ReactNative #AI",
+        "Flutter toolkit for AI features: chat widgets, streaming responses, offline caching. Works with GPT-4/Claude. #Flutter #AI",
+    ],
+}
+
+_SIMULATION_TWEETS_GENERIC = [
+    "New dataset released: cleaned and ready for ML projects. Normalized, deduplicated, UTF-8. #DataScience #MachineLearning",
+]
+
+# ---------------------------------------------------------------------------
+# System prompts
+# ---------------------------------------------------------------------------
+
 _SYSTEM_PROMPT = """\
-You are a data science expert participating authentically in Reddit communities.
+You are a developer and data science expert participating authentically in Reddit communities.
 Generate a single Reddit post that is genuinely helpful, educational, and non-promotional.
 The post should:
 - Provide real value to the community
-- Mention the store link naturally and briefly at the end (if provided)
+- Match the specific product type and audience provided
+- Mention the store link naturally at the end
 - Never read as spam or a sales pitch
 - Match the tone and norms of the target subreddit
 - Be written in English
@@ -37,260 +429,28 @@ The post should:
 Respond ONLY with a valid JSON object with these keys:
 - "title": post title (string, max 300 chars)
 - "body": post body in Markdown (string)
-- "subreddit": the chosen subreddit (string, without 'r/')
+- "subreddit": the subreddit (string, without 'r/')
 - "score_estimado": estimated upvote score 1-100 (integer)
 - "style": the post style used (string)
 
 No markdown fences, no explanation — just the JSON object.
 """
 
-_SIMULATION_POSTS = [
-    # --- recurso gratuito (3 variaciones) ---
-    {
-        "title": "[Resource] Free cleaned e-commerce dataset — 10k product records, ready to use",
-        "body": (
-            "Hi r/datascience! I've been working on a data cleaning pipeline and as a "
-            "byproduct I have a cleaned e-commerce dataset (10,000 product records) with:\n\n"
-            "- Normalized category labels\n"
-            "- Price outliers removed (>3σ)\n"
-            "- Duplicate records deduplicated\n"
-            "- UTF-8 encoded, no BOM\n\n"
-            "Good baseline for recommendation systems or price-prediction models. "
-            "Download it free at [Multi Farm System](https://multifarm.lemonsqueezy.com).\n\n"
-            "Happy to answer questions about the cleaning methodology!"
-        ),
-        "subreddit": "datascience",
-        "score_estimado": 85,
-        "style": "recurso gratuito",
-    },
-    {
-        "title": "[Free Dataset] 5000 annotated product reviews for sentiment analysis",
-        "body": (
-            "Sharing a dataset I curated for a sentiment analysis project:\n\n"
-            "**5,000 product reviews** with:\n"
-            "- Manual sentiment labels (positive/negative/neutral)\n"
-            "- Star ratings (1-5)\n"
-            "- Product categories\n"
-            "- Cleaned text (no HTML, normalized unicode)\n\n"
-            "Great for training classifiers or benchmarking NLP models. "
-            "Grab it at [Multi Farm System](https://multifarm.lemonsqueezy.com).\n\n"
-            "Let me know if you'd like the labeling guidelines I used!"
-        ),
-        "subreddit": "datascience",
-        "score_estimado": 78,
-        "style": "recurso gratuito",
-    },
-    {
-        "title": "Releasing a free dataset: 20k daily stock prices with technical indicators",
-        "body": (
-            "For anyone working on financial ML projects, I'm releasing a dataset with:\n\n"
-            "- 20,000 daily records across 50 tickers\n"
-            "- OHLCV data + pre-calculated indicators (RSI, MACD, Bollinger Bands)\n"
-            "- Adjusted for splits and dividends\n"
-            "- No missing values or weekends\n\n"
-            "Useful for backtesting strategies or training price prediction models. "
-            "Download: [Multi Farm System](https://multifarm.lemonsqueezy.com)"
-        ),
-        "subreddit": "datasets",
-        "score_estimado": 82,
-        "style": "recurso gratuito",
-    },
-
-    # --- tip técnico (3 variaciones) ---
-    {
-        "title": "I cleaned 50k rows of messy financial data — here's what I learned",
-        "body": (
-            "Working with real-world financial datasets is humbling. After spending weeks "
-            "cleaning 50k+ rows, here are the most common issues:\n\n"
-            "1. **Mixed date formats** — some rows had ISO 8601, others MM/DD/YY\n"
-            "2. **Currency symbols embedded in numeric fields** — `$1,234.56` vs `1234.56`\n"
-            "3. **Inconsistent null representations** — `'N/A'`, `'null'`, `'-'`, `''`, `0`\n\n"
-            "The tool that saved me the most time: a regex-based type-inference pass before "
-            "loading into pandas. Happy to share the script.\n\n"
-            "If you need pre-cleaned datasets to validate your pipelines, "
-            "[Multi Farm System](https://multifarm.lemonsqueezy.com) has a few available."
-        ),
-        "subreddit": "datasets",
-        "score_estimado": 72,
-        "style": "tip técnico",
-    },
-    {
-        "title": "The one pandas trick that cut my data cleaning time in half",
-        "body": (
-            "After years of data wrangling, this pattern has saved me countless hours:\n\n"
-            "```python\n"
-            "# Chain operations with pipe() for readable transformations\n"
-            "df = (raw_df\n"
-            "    .pipe(normalize_columns)\n"
-            "    .pipe(remove_outliers, threshold=3)\n"
-            "    .pipe(fill_missing, strategy='median')\n"
-            "    .pipe(validate_schema))\n"
-            "```\n\n"
-            "Each function is testable, reusable, and the pipeline is self-documenting.\n\n"
-            "More cleaning utilities and sample datasets at "
-            "[Multi Farm System](https://multifarm.lemonsqueezy.com)."
-        ),
-        "subreddit": "learnmachinelearning",
-        "score_estimado": 68,
-        "style": "tip técnico",
-    },
-    {
-        "title": "Stop using df.apply() for everything — here's why vectorization matters",
-        "body": (
-            "I see this mistake constantly in data cleaning code:\n\n"
-            "```python\n"
-            "# Slow: 45 seconds on 1M rows\n"
-            "df['clean'] = df['text'].apply(lambda x: x.lower().strip())\n\n"
-            "# Fast: 0.3 seconds on 1M rows\n"
-            "df['clean'] = df['text'].str.lower().str.strip()\n"
-            "```\n\n"
-            "Vectorized string methods are 100x+ faster. Same applies to numeric operations.\n\n"
-            "I've compiled benchmarks and optimized cleaning functions at "
-            "[Multi Farm System](https://multifarm.lemonsqueezy.com)."
-        ),
-        "subreddit": "datascience",
-        "score_estimado": 75,
-        "style": "tip técnico",
-    },
-
-    # --- pregunta con respuesta (3 variaciones) ---
-    {
-        "title": "What's your go-to strategy for handling missing values in clustered time series?",
-        "body": (
-            "Working on a sensor dataset with ~12% missing values distributed non-randomly. "
-            "Gaps tend to cluster (equipment downtime), so simple interpolation gives "
-            "misleading results.\n\n"
-            "I've tried:\n"
-            "- Forward fill → introduces lag artifacts\n"
-            "- Cubic spline → oscillates near large gaps\n"
-            "- MICE imputation → slow but decent\n\n"
-            "What's your preferred approach for clustered missingness in time series?\n\n"
-            "For reference: [sample raw vs. cleaned data here]"
-            "(https://multifarm.lemonsqueezy.com) if you want to experiment."
-        ),
-        "subreddit": "MachineLearning",
-        "score_estimado": 61,
-        "style": "pregunta con respuesta",
-    },
-    {
-        "title": "How do you handle categorical variables with 500+ unique values?",
-        "body": (
-            "Working on a retail dataset where `product_id` has 500+ unique values. "
-            "One-hot encoding explodes dimensionality, but label encoding loses semantics.\n\n"
-            "Currently considering:\n"
-            "- Target encoding (risk of leakage)\n"
-            "- Embedding layers (requires deep learning)\n"
-            "- Frequency encoding (loses rare categories)\n\n"
-            "What's worked best for you in production?\n\n"
-            "Dataset available for testing at "
-            "[Multi Farm System](https://multifarm.lemonsqueezy.com)."
-        ),
-        "subreddit": "datascience",
-        "score_estimado": 58,
-        "style": "pregunta con respuesta",
-    },
-    {
-        "title": "Best practices for versioning datasets in ML projects?",
-        "body": (
-            "My team keeps running into reproducibility issues. Training data changes, "
-            "models break, and nobody knows which dataset version was used.\n\n"
-            "We've tried:\n"
-            "- Git LFS (slow, storage limits)\n"
-            "- DVC (decent but complex setup)\n"
-            "- Manual versioning with timestamps (error-prone)\n\n"
-            "What's your workflow for dataset versioning?\n\n"
-            "Sample versioned datasets for reference: "
-            "[Multi Farm System](https://multifarm.lemonsqueezy.com)."
-        ),
-        "subreddit": "MachineLearning",
-        "score_estimado": 64,
-        "style": "pregunta con respuesta",
-    },
-
-    # --- showcase de dataset (3 variaciones) ---
-    {
-        "title": "Showcase: automated data-quality report for any CSV in under 10 seconds",
-        "body": (
-            "Built a small tool that generates a data-quality report for any CSV:\n\n"
-            "```python\nfrom data_quality import report\nreport('my_data.csv')\n```\n\n"
-            "Output includes: missing-value heatmap, type inference, duplicate detection, "
-            "outlier flagging, and a cleanliness score (0–100).\n\n"
-            "We use this internally before releasing cleaned datasets at "
-            "[Multi Farm System](https://multifarm.lemonsqueezy.com). "
-            "Happy to open-source the report generator if there's interest!"
-        ),
-        "subreddit": "learnmachinelearning",
-        "score_estimado": 54,
-        "style": "showcase de dataset",
-    },
-    {
-        "title": "Built a dataset of 15k job postings with salary data — sharing insights",
-        "body": (
-            "Scraped and cleaned 15,000 job postings from the last 6 months:\n\n"
-            "**Key findings:**\n"
-            "- Remote roles pay 12% more on average\n"
-            "- 'Senior' in title adds ~$25k to median salary\n"
-            "- Python demand up 23% YoY\n\n"
-            "Dataset includes: title, company, location, salary range, skills required.\n\n"
-            "Full dataset available at "
-            "[Multi Farm System](https://multifarm.lemonsqueezy.com)."
-        ),
-        "subreddit": "datascience",
-        "score_estimado": 71,
-        "style": "showcase de dataset",
-    },
-    {
-        "title": "Created a benchmark dataset for testing data cleaning pipelines",
-        "body": (
-            "Tired of not having a standard way to test cleaning code, so I made one:\n\n"
-            "**The Messy Data Benchmark** includes:\n"
-            "- 10 CSV files with known issues (duplicates, nulls, outliers, encoding)\n"
-            "- Ground truth 'clean' versions\n"
-            "- Scoring script to measure cleaning accuracy\n\n"
-            "Great for unit testing or comparing cleaning libraries.\n\n"
-            "Download at [Multi Farm System](https://multifarm.lemonsqueezy.com)."
-        ),
-        "subreddit": "datasets",
-        "score_estimado": 66,
-        "style": "showcase de dataset",
-    },
-]
-
-
 _TWEET_SYSTEM_PROMPT = """\
-You are a data science communicator writing for Twitter/X.
+You are a developer communicating on Twitter/X.
 Generate a single tweet (STRICTLY ≤ 280 characters including spaces and hashtags) that:
-- Delivers one concrete insight or tip from the provided Reddit post
-- Feels native to Twitter — punchy, direct, no filler
-- Ends with 2-3 relevant hashtags (#DataScience #MachineLearning #datasets etc.)
-- Optionally includes the store URL if it fits naturally
+- Delivers one concrete insight about the product
+- Feels native to Twitter — punchy, direct, technical
+- Ends with 2-3 relevant hashtags
+- Optionally includes the URL if it fits naturally
 
 Respond ONLY with the raw tweet text — no quotes, no explanation, no markdown.
 """
 
-_SIMULATION_TWEETS = [
-    (
-        "Cleaned 50k financial rows. Top pain points: mixed date formats, "
-        "embedded currency symbols, inconsistent nulls. "
-        "Fix type inference before pandas. #DataScience #DataCleaning #datasets"
-    ),
-    (
-        "Free cleaned e-commerce dataset: 10k products, normalized labels, "
-        "outliers removed, deduped. Great baseline for recommendation systems. "
-        "Link in bio: multifarm.lemonsqueezy.com #MachineLearning #OpenData"
-    ),
-    (
-        "MICE > forward-fill for clustered missing values in time series. "
-        "Forward-fill introduces lag artifacts near equipment-downtime gaps. "
-        "What's your go-to? #DataScience #TimeSeries"
-    ),
-    (
-        "Built a CSV data-quality report: missing-value heatmap, type inference, "
-        "duplicate detection, outlier flags, cleanliness score 0–100. "
-        "Open-sourcing soon. #Python #DataEngineering"
-    ),
-]
 
+# ---------------------------------------------------------------------------
+# Content Agents
+# ---------------------------------------------------------------------------
 
 class TwitterContentAgent:
     """Generate tweet text from a Reddit post via Claude API (or simulation)."""
@@ -306,39 +466,41 @@ class TwitterContentAgent:
         self,
         post: dict,
         store_url: str | None = None,
+        farm_type: str | None = None,
     ) -> str:
         """Generate a tweet (≤280 chars) based on *post*.
 
         Returns the raw tweet text string.
         """
         if self._simulation:
-            return self._sim_tweet(post)
-        return self._api_tweet(post, store_url)
+            return self._sim_tweet(post, farm_type)
+        return self._api_tweet(post, store_url, farm_type)
 
-    def _api_tweet(self, post: dict, store_url: str | None) -> str:
+    def _api_tweet(self, post: dict, store_url: str | None, farm_type: str | None) -> str:
         import anthropic
+
+        config = FARM_CONFIG.get(farm_type, {})
+        product_type = config.get("product_type", "digital product")
+        audience = config.get("audience", "developers")
 
         url_hint = f"\nStore URL (include if it fits): {store_url}" if store_url else ""
         prompt = (
             f"Reddit post title: {post.get('title', '')}\n"
-            f"Style: {post.get('style', '')}\n"
+            f"Product type: {product_type}\n"
+            f"Target audience: {audience}\n"
             f"Subreddit: r/{post.get('subreddit', '')}{url_hint}\n\n"
-            "Write one tweet (≤280 chars) distilling the key insight."
+            "Write one tweet (≤280 chars) promoting this product."
         )
 
         try:
             client = anthropic.Anthropic(api_key=self.api_key)
             response = client.messages.create(
-                model="claude-opus-4-6",
+                model="claude-sonnet-4-20250514",
                 max_tokens=150,
-                thinking={"type": "adaptive"},
                 system=_TWEET_SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": prompt}],
             )
-            text = next(
-                block.text for block in response.content if block.type == "text"
-            ).strip()
-            # Enforce hard limit
+            text = response.content[0].text.strip()
             if len(text) > 280:
                 text = text[:277] + "..."
             logger.info("[TwitterContentAgent] Tweet (%d chars) generated.", len(text))
@@ -347,14 +509,13 @@ class TwitterContentAgent:
             logger.warning(
                 "[TwitterContentAgent] API error (%s) — falling back to simulation.", exc
             )
-            return self._sim_tweet(post)
+            return self._sim_tweet(post, farm_type)
 
-    def _sim_tweet(self, post: dict) -> str:
-        style = post.get("style", "")
-        style_map = {s: i for i, s in enumerate(_STYLES)}
-        idx = style_map.get(style, self._sim_index) % len(_SIMULATION_TWEETS)
+    def _sim_tweet(self, post: dict, farm_type: str | None) -> str:
+        tweets = _SIMULATION_TWEETS_BY_FARM.get(farm_type, _SIMULATION_TWEETS_GENERIC)
+        idx = self._sim_index % len(tweets)
         self._sim_index += 1
-        return _SIMULATION_TWEETS[idx]
+        return tweets[idx]
 
 
 class RedditContentAgent:
@@ -364,6 +525,7 @@ class RedditContentAgent:
         self.api_key: str | None = os.environ.get("ANTHROPIC_API_KEY")
         self._simulation: bool = not bool(self.api_key)
         self._style_index: int = 0
+        self._sim_indices: dict[str, int] = {}  # Track per-farm simulation index
         if self._simulation:
             logger.info("[RedditContentAgent] Running in simulation mode (no API key).")
 
@@ -377,19 +539,16 @@ class RedditContentAgent:
         subreddit: str,
         product_type: str = "cleaned_dataset",
         store_url: str | None = None,
+        farm_type: str | None = None,
     ) -> dict:
-        """Generate a Reddit post dict.
+        """Generate a Reddit post dict for a specific farm.
 
         Returns keys: title, body, subreddit, score_estimado, style.
         """
         style = self._next_style()
         if self._simulation:
-            return self._sim_post(subreddit, style)
-        return self._api_post(subreddit, product_type, store_url, style)
-
-    # ------------------------------------------------------------------
-    # Internal helpers
-    # ------------------------------------------------------------------
+            return self._sim_post(subreddit, style, farm_type)
+        return self._api_post(subreddit, product_type, store_url, style, farm_type)
 
     def _api_post(
         self,
@@ -397,34 +556,36 @@ class RedditContentAgent:
         product_type: str,
         store_url: str | None,
         style: str,
+        farm_type: str | None,
     ) -> dict:
         import anthropic
 
-        url_hint = f"\nStore URL (mention naturally at the end): {store_url}" if store_url else ""
+        config = FARM_CONFIG.get(farm_type, {})
+        niches = config.get("niches", [])
+        audience = config.get("audience", "developers")
+        actual_product_type = config.get("product_type", product_type)
+
+        niche_hint = f"\nNiche focus: {random.choice(niches)}" if niches else ""
+        url_hint = f"\nStore URL (mention at end): {store_url}" if store_url else ""
+
         prompt = (
             f"Target subreddit: r/{subreddit}\n"
-            f"Product type: {product_type}\n"
+            f"Product type: {actual_product_type}\n"
+            f"Target audience: {audience}{niche_hint}\n"
             f"Post style: {style}{url_hint}\n\n"
-            "Return a JSON object with keys: title, body, subreddit, score_estimado, style."
+            "Generate a Reddit post. Return JSON with: title, body, subreddit, score_estimado, style."
         )
 
         try:
             client = anthropic.Anthropic(api_key=self.api_key)
-            with client.messages.stream(
-                model="claude-opus-4-6",
+            response = client.messages.create(
+                model="claude-sonnet-4-20250514",
                 max_tokens=1024,
-                thinking={"type": "adaptive"},
                 system=_SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": prompt}],
-            ) as stream:
-                response = stream.get_final_message()
-
-            # Extract the text block (skip thinking blocks)
-            text = next(
-                block.text for block in response.content if block.type == "text"
             )
-            text = text.strip()
-            # Strip markdown fences if the model wrapped the JSON
+
+            text = response.content[0].text.strip()
             if text.startswith("```"):
                 parts = text.split("```")
                 text = parts[1].lstrip("json").strip() if len(parts) > 1 else text
@@ -434,8 +595,8 @@ class RedditContentAgent:
             post.setdefault("style", style)
             post.setdefault("score_estimado", 50)
             logger.info(
-                "[RedditContentAgent] Post generated for r/%s — score_est=%s",
-                subreddit, post.get("score_estimado"),
+                "[RedditContentAgent] Post generated for r/%s (farm=%s) — score=%s",
+                subreddit, farm_type, post.get("score_estimado"),
             )
             return post
 
@@ -443,11 +604,15 @@ class RedditContentAgent:
             logger.warning(
                 "[RedditContentAgent] API error (%s) — falling back to simulation.", exc
             )
-            return self._sim_post(subreddit, style)
+            return self._sim_post(subreddit, style, farm_type)
 
-    def _sim_post(self, subreddit: str, style: str) -> dict:
-        matches = [p for p in _SIMULATION_POSTS if p["style"] == style]
-        post = dict(random.choice(matches if matches else _SIMULATION_POSTS))
+    def _sim_post(self, subreddit: str, style: str, farm_type: str | None) -> dict:
+        posts = _SIMULATION_POSTS_BY_FARM.get(farm_type, _SIMULATION_POSTS_GENERIC)
+
+        # Get next post for this farm (rotate through available posts)
+        idx = self._sim_indices.get(farm_type, 0)
+        post = dict(posts[idx % len(posts)])
+        self._sim_indices[farm_type] = idx + 1
+
         post["subreddit"] = subreddit
-        post["style"] = style
         return post

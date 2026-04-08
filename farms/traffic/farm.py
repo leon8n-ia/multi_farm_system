@@ -1,5 +1,8 @@
-"""TrafficFarm: generates organic Reddit posts + tweets each cycle,
+"""TrafficFarm: generates organic Reddit posts + tweets per farm type,
 exports everything to traffic_queue.md in the project root.
+
+Rotates through active farms, generating farm-specific content with
+appropriate subreddits, product descriptions, and Gumroad links.
 """
 import hashlib
 import logging
@@ -11,7 +14,7 @@ from typing import Any
 import config
 from farms.base_farm import BaseFarm
 from farms.seller_agent import SellerAgent
-from farms.traffic.content_agent import SUBREDDITS, RedditContentAgent, TwitterContentAgent
+from farms.traffic.content_agent import FARM_CONFIG, RedditContentAgent, TwitterContentAgent
 from farms.traffic.discord_bridge import DiscordBridge
 from farms.traffic.twitter_bridge import TwitterBridge
 from shared.models import FarmType
@@ -23,8 +26,16 @@ TRAFFIC_ARCHIVE_PATH = Path("traffic_archive.md")
 MIN_PENDING_POSTS = 4
 MAX_PENDING_POSTS = 8
 
-# Niches rotate each cycle, mapped to Gumroad URLs
-NICHES = list(config.GUMROAD_PRODUCT_URLS.keys())
+# All productive farms that can generate traffic
+PRODUCTIVE_FARMS = [
+    "data_cleaning",
+    "auto_reports",
+    "product_listing",
+    "monetized_content",
+    "react_nextjs",
+    "devops_cloud",
+    "mobile_dev",
+]
 
 _SELLER_STRATEGY: dict = {
     "primary_channel": "reddit",
@@ -33,13 +44,13 @@ _SELLER_STRATEGY: dict = {
     "discount_threshold": 0,
     "discount_rate": 0.0,
     "listing_quality": "high",
-    "target_audience": "data_scientists",
+    "target_audience": "developers",
     "bundle_strategy": False,
 }
 
 
 class TrafficFarm(BaseFarm):
-    """Generates one Reddit post + one tweet per cycle, queued in traffic_queue.md."""
+    """Generates Reddit posts + tweets rotating through all productive farms."""
 
     def __init__(
         self,
@@ -57,20 +68,32 @@ class TrafficFarm(BaseFarm):
         self.discord_bridge = DiscordBridge()
         self.seller_agent = SellerAgent(farm_id=id, strategy=dict(_SELLER_STRATEGY))
         self.product_type = "reddit_post"
-        self._subreddit_index: int = 0
-        self._niche_index: int = 0
+        self._farm_index: int = 0
         self._posts_generated: int = 0
         logger.info("[%s] Discord: simulation_mode=%s", name, self.discord_bridge._simulation)
 
-    def _next_niche(self) -> str:
-        niche = NICHES[self._niche_index % len(NICHES)]
-        self._niche_index += 1
-        return niche
+    def _next_farm(self) -> str:
+        """Rotate through productive farms."""
+        farm = PRODUCTIVE_FARMS[self._farm_index % len(PRODUCTIVE_FARMS)]
+        self._farm_index += 1
+        return farm
 
-    def _next_subreddit(self) -> str:
-        sub = SUBREDDITS[self._subreddit_index % len(SUBREDDITS)]
-        self._subreddit_index += 1
-        return sub
+    def _get_farm_config(self, farm_type: str) -> dict:
+        """Get configuration for a farm type."""
+        return FARM_CONFIG.get(farm_type, {})
+
+    def _get_subreddit_for_farm(self, farm_type: str) -> str:
+        """Get appropriate subreddit for a farm type."""
+        config = self._get_farm_config(farm_type)
+        subreddits = config.get("subreddits", ["datascience"])
+        # Alternate between available subreddits
+        idx = self._posts_generated % len(subreddits)
+        return subreddits[idx]
+
+    def _get_gumroad_url_for_farm(self, farm_type: str) -> str:
+        """Get Gumroad URL for a farm type."""
+        farm_config = self._get_farm_config(farm_type)
+        return farm_config.get("gumroad_url", self.store_url or "")
 
     # ------------------------------------------------------------------
     # Orchestration
@@ -91,13 +114,13 @@ class TrafficFarm(BaseFarm):
     # ------------------------------------------------------------------
 
     def run_production(self) -> None:
-        """Generate one Reddit post + one tweet and buffer both.
+        """Generate one Reddit post + one tweet for the next farm in rotation.
 
         Manages queue size: archives published posts and skips generation
         if pending posts >= MAX_PENDING_POSTS (8).
         """
         # 0 — Archive any published posts first
-        archived = self._archive_published_posts()
+        self._archive_published_posts()
 
         # 0.1 — Check pending count, skip if at max
         pending_count = self._count_pending_posts()
@@ -108,37 +131,44 @@ class TrafficFarm(BaseFarm):
             )
             return
 
-        subreddit = self._next_subreddit()
-        niche = self._next_niche()
-        gumroad_url = config.GUMROAD_PRODUCT_URLS.get(niche, self.store_url)
+        # Get next farm in rotation
+        farm_type = self._next_farm()
+        subreddit = self._get_subreddit_for_farm(farm_type)
+        gumroad_url = self._get_gumroad_url_for_farm(farm_type)
+        farm_config = self._get_farm_config(farm_type)
+        product_type = farm_config.get("product_type", "digital product")
 
         # 1 — Reddit post
         post = self.content_agent.generate_post(
             subreddit=subreddit,
-            product_type=niche,
+            product_type=product_type,
             store_url=gumroad_url,
+            farm_type=farm_type,
         )
         post["timestamp"] = datetime.now().isoformat(timespec="seconds")
-        post["niche"] = niche
+        post["niche"] = farm_type
+        post["farm_type"] = farm_type
         post["gumroad_url"] = gumroad_url
+        post["product_type"] = product_type
 
         # 2 — Tweet derived from the Reddit post
         tweet_text = self.twitter_content_agent.generate_tweet(
-            post=post, store_url=gumroad_url
+            post=post,
+            store_url=gumroad_url,
+            farm_type=farm_type,
         )
         tweet_result = self.twitter_bridge.post_tweet(tweet_text)
         post["tweet"] = {
             "text": tweet_text,
-            **tweet_result,  # tweet_id, url, simulation
+            **tweet_result,
         }
 
-        # 3 — Discord posts (secondary channel, additive — failures are absorbed)
+        # 3 — Discord posts (secondary channel)
         discord_results: list[dict] = []
         if config.DISCORD_ENABLED and config.DISCORD_TARGET_CHANNELS:
-            niche_label = niche.replace("_", " ").title()
             discord_msg = self.discord_bridge.format_post(
                 product=post.get("title", "New Product"),
-                niche=niche,
+                niche=farm_type,
                 platform_url=gumroad_url,
             )
             for ch_id in config.DISCORD_TARGET_CHANNELS:
@@ -147,18 +177,20 @@ class TrafficFarm(BaseFarm):
                 except Exception as exc:
                     logger.warning("[%s] Discord channel %s error: %s", self.name, ch_id, exc)
                     ok = False
-                discord_results.append({"channel_id": str(ch_id), "ok": ok, "niche": niche})
+                discord_results.append({"channel_id": str(ch_id), "ok": ok, "niche": farm_type})
         post["discord"] = discord_results
 
         self.output_buffer.append(post)
+        self._posts_generated += 1
+
         sim_tag = " [sim]" if tweet_result["simulation"] else ""
         logger.info(
-            "[%s] Post+tweet generated — r/%s | style=%s | tweet%s: %s",
+            "[%s] Post generated — farm=%s | r/%s | %s%s",
             self.name,
+            farm_type,
             post.get("subreddit"),
-            post.get("style"),
+            product_type,
             sim_tag,
-            tweet_result["url"],
         )
 
     def run_competition(self) -> Any:
@@ -171,7 +203,6 @@ class TrafficFarm(BaseFarm):
             return
 
         self._export_to_queue(self.output_buffer)
-        self._posts_generated += len(self.output_buffer)
 
         for post in self.output_buffer:
             tweet = post.get("tweet", {})
@@ -180,6 +211,7 @@ class TrafficFarm(BaseFarm):
                 "price": 0.0,
                 "item": f"r/{post.get('subreddit', '?')} post",
                 "subreddit": post.get("subreddit"),
+                "farm_type": post.get("farm_type"),
                 "style": post.get("style"),
                 "tweet_url": tweet.get("url"),
                 "tweet_simulation": tweet.get("simulation", True),
@@ -189,16 +221,15 @@ class TrafficFarm(BaseFarm):
         self.output_buffer.clear()
 
     def apply_economics(self) -> None:
-        pass  # No credit economy for this farm
+        pass
 
     def eliminate_dead(self) -> None:
-        pass  # No producer agents
+        pass
 
     def reproduce_winners(self) -> None:
-        pass  # No reproduction
+        pass
 
     def calculate_performance(self) -> None:
-        # roi = 0 keeps the supervisor from trying to expand this farm
         self.roi = 0.0
 
     # ------------------------------------------------------------------
@@ -206,10 +237,7 @@ class TrafficFarm(BaseFarm):
     # ------------------------------------------------------------------
 
     def _parse_queue_posts(self) -> list[dict]:
-        """Parse all posts from traffic_queue.md with their status.
-
-        Returns list of dicts with: timestamp, subreddit, style, niche, status, title, raw_block
-        """
+        """Parse all posts from traffic_queue.md with their status."""
         if not TRAFFIC_QUEUE_PATH.exists():
             return []
         try:
@@ -218,7 +246,6 @@ class TrafficFarm(BaseFarm):
             return []
 
         posts: list[dict] = []
-        # New format: ## [timestamp] r/subreddit — style | niche | Status: pending
         header_pattern = re.compile(
             r"^## \[(.+?)\] r/(\w+) — (.+?) \| (.+?) \| Status: (\w+)$"
         )
@@ -232,7 +259,6 @@ class TrafficFarm(BaseFarm):
             if header_match:
                 timestamp, subreddit, style, niche, status = header_match.groups()
 
-                # Capture the entire block until next "---"
                 block_lines = [line]
                 title = ""
                 i += 1
@@ -242,7 +268,6 @@ class TrafficFarm(BaseFarm):
                     if title_match:
                         title = title_match.group(1).strip()
                     i += 1
-                # Include the separator
                 if i < len(lines) and lines[i].startswith("---"):
                     block_lines.append(lines[i])
                     i += 1
@@ -262,11 +287,7 @@ class TrafficFarm(BaseFarm):
         return posts
 
     def _archive_published_posts(self) -> int:
-        """Move posts with status=published to traffic_archive.md.
-
-        Rewrites traffic_queue.md with only pending posts.
-        Returns count of archived posts.
-        """
+        """Move posts with status=published to traffic_archive.md."""
         posts = self._parse_queue_posts()
         published = [p for p in posts if p["status"] == "published"]
         pending = [p for p in posts if p["status"] == "pending"]
@@ -274,7 +295,6 @@ class TrafficFarm(BaseFarm):
         if not published:
             return 0
 
-        # Append published posts to archive
         archive_content = "\n\n".join(p["raw_block"] for p in published) + "\n\n"
         try:
             if not TRAFFIC_ARCHIVE_PATH.exists():
@@ -289,7 +309,6 @@ class TrafficFarm(BaseFarm):
             logger.error("[%s] Failed to write archive: %s", self.name, exc)
             return 0
 
-        # Rewrite queue with only pending posts
         try:
             queue_header = (
                 "# Traffic Queue — Reddit Posts & Tweets\n\n"
@@ -319,7 +338,7 @@ class TrafficFarm(BaseFarm):
     # ------------------------------------------------------------------
 
     def _get_existing_post_hashes(self) -> set[str]:
-        """Extract hashes of existing posts (title+subreddit) from traffic_queue.md."""
+        """Extract hashes of existing posts from traffic_queue.md."""
         if not TRAFFIC_QUEUE_PATH.exists():
             return set()
         try:
@@ -328,8 +347,6 @@ class TrafficFarm(BaseFarm):
             return set()
 
         hashes: set[str] = set()
-        # Pattern: ## [timestamp] r/subreddit — style
-        # Followed by **Título:** title
         header_pattern = re.compile(r"^## \[.*?\] r/(\w+) —")
         title_pattern = re.compile(r"^\*\*Título:\*\* (.+)$")
 
@@ -348,16 +365,12 @@ class TrafficFarm(BaseFarm):
         return hashes
 
     def _export_to_queue(self, posts: list[dict]) -> None:
-        """Append posts (+ tweets) to traffic_queue.md in copy-paste-ready Markdown.
-
-        Skips posts that already exist (same title + subreddit).
-        """
+        """Append posts to traffic_queue.md in copy-paste-ready Markdown."""
         existing_hashes = self._get_existing_post_hashes()
         lines: list[str] = []
         skipped = 0
 
         for post in posts:
-            # Check for duplicate
             title = post.get("title", "")
             sub = post.get("subreddit", "?")
             key = f"{sub}|{title}"
@@ -366,20 +379,24 @@ class TrafficFarm(BaseFarm):
                 skipped += 1
                 logger.debug("[%s] Skipping duplicate post: r/%s — %s", self.name, sub, title[:50])
                 continue
+
             ts = post.get("timestamp", datetime.now().isoformat(timespec="seconds"))
             style = post.get("style", "?")
-            niche = post.get("niche", "?")
+            farm_type = post.get("farm_type", post.get("niche", "?"))
             gumroad_url = post.get("gumroad_url", "")
             body = post.get("body", "")
             score = post.get("score_estimado", "?")
+            product_type = post.get("product_type", "")
             tweet = post.get("tweet", {})
             tweet_text = tweet.get("text", "")
             tweet_url = tweet.get("url", "")
             tweet_sim = tweet.get("simulation", True)
 
             # --- Reddit section ---
-            lines.append(f"## [{ts}] r/{sub} — {style} | {niche} | Status: pending")
+            lines.append(f"## [{ts}] r/{sub} — {style} | {farm_type} | Status: pending")
             lines.append("")
+            lines.append(f"**Farm:** {farm_type}")
+            lines.append(f"**Product:** {product_type}")
             lines.append(f"**Score estimado:** {score}/100")
             lines.append("")
             lines.append(f"**Gumroad:** <{gumroad_url}>")
@@ -401,7 +418,7 @@ class TrafficFarm(BaseFarm):
                 lines.append(f"🐦 {tweet_url}")
                 lines.append("")
 
-            # --- Discord section (only when channels were targeted) ---
+            # --- Discord section ---
             discord_channels = post.get("discord", [])
             if discord_channels:
                 lines.append("**Discord:**")
@@ -414,11 +431,9 @@ class TrafficFarm(BaseFarm):
             lines.append("---")
             lines.append("")
 
-        # Log skipped duplicates
         if skipped:
             logger.info("[%s] Skipped %d duplicate post(s)", self.name, skipped)
 
-        # Nothing new to write
         if not lines:
             return
 
