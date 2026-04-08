@@ -4,6 +4,8 @@ import copy
 import logging
 import random
 
+from datetime import datetime
+
 from config import (
     COST_SELLER_LISTING,
     FARM_DEATH_THRESHOLD,
@@ -13,10 +15,13 @@ from config import (
 from core.competition import run_competition as _run_competition
 from core.economy import EconomyEngine
 from farms.base_farm import BaseFarm
+from farms.data_cleaning.revenue_bridge import LemonSqueezyRevenueBridge
+from farms.gumroad_bridge import GumroadRevenueBridge
 from farms.mobile_dev.producer_agent_1 import ReactNativeAgent
 from farms.mobile_dev.producer_agent_2 import FlutterAgent
 from farms.mobile_dev.producer_agent_3 import MobilePromptsAgent
 from farms.mobile_dev.seller_agent import MobileDevSellerAgent
+from farms.revenue_bridge_router import RevenueBridgeRouter
 from shared.models import Agent, AgentStatus, FarmType
 
 logger = logging.getLogger(__name__)
@@ -38,6 +43,10 @@ class MobileDevFarm(BaseFarm):
         self.economy = EconomyEngine()
         self.seller_agent = MobileDevSellerAgent(farm_id=id)
         self.product_type = "starter_kit"
+        self.revenue_bridge = RevenueBridgeRouter([
+            LemonSqueezyRevenueBridge(),
+            GumroadRevenueBridge(),
+        ], farm_type="mobile_dev")
 
         # Initialize competing producer agents
         self._init_producer_agents()
@@ -167,10 +176,20 @@ class MobileDevFarm(BaseFarm):
                 revenue += price
                 self.seller_agent.total_revenue += price
                 self.seller_agent.sales_history.append({"sold": True, "price": price})
+                self.revenue_bridge.record_sale_attempt(price_usd=price, sold=True)
+                self.revenue_bridge.publish_product(
+                    title=title,
+                    description=description,
+                    price_usd=price,
+                )
+                # Upload to Backblaze storage
+                file_name = f"starterkit_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+                self.revenue_bridge.upload_product_to_drive({"product": product, "listing": listing}, file_name)
                 logger.info("[%s] SOLD: %s @ $%.2f", self.name, title, price)
             else:
                 items_expired += 1
                 self.seller_agent.sales_history.append({"sold": False, "price": 0.0})
+                self.revenue_bridge.record_sale_attempt(price_usd=price, sold=False)
 
         self.output_buffer.clear()
 

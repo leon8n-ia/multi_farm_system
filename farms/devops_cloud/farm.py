@@ -4,6 +4,8 @@ import copy
 import logging
 import random
 
+from datetime import datetime
+
 from config import (
     COST_SELLER_LISTING,
     FARM_DEATH_THRESHOLD,
@@ -13,26 +15,18 @@ from config import (
 from core.competition import run_competition as _run_competition
 from core.economy import EconomyEngine
 from farms.base_farm import BaseFarm
+from farms.data_cleaning.revenue_bridge import LemonSqueezyRevenueBridge
 from farms.devops_cloud.producer_agent_1 import DockerAgent
-from farms.seller_agent import SellerAgent
+from farms.devops_cloud.producer_agent_2 import AWSAgent
+from farms.devops_cloud.producer_agent_3 import K8sAgent
+from farms.devops_cloud.seller_agent import DevOpsSellerAgent
+from farms.gumroad_bridge import GumroadRevenueBridge
+from farms.revenue_bridge_router import RevenueBridgeRouter
 from shared.models import Agent, AgentStatus, FarmType
 
 logger = logging.getLogger(__name__)
 
 SALE_PROBABILITY = 0.35
-
-_DEFAULT_SELLER_STRATEGY: dict = {
-    "primary_channel": "gumroad",
-    "pricing_model": "tiered",
-    "base_price": 24.0,
-    "discount_threshold": 3,
-    "discount_rate": 0.15,
-    "listing_quality": "high",
-    "target_audience": "DevOps engineers and backend developers",
-    "bundle_strategy": True,
-    "niche_focus": "devops_cloud",
-    "output_format": "markdown",
-}
 
 
 class DevOpsCloudFarm(BaseFarm):
@@ -47,8 +41,12 @@ class DevOpsCloudFarm(BaseFarm):
     ) -> None:
         super().__init__(id, name, FarmType.DEVOPS_CLOUD, capital, credits)
         self.economy = EconomyEngine()
-        self.seller_agent = SellerAgent(farm_id=id, strategy=dict(_DEFAULT_SELLER_STRATEGY))
+        self.seller_agent = DevOpsSellerAgent(farm_id=id)
         self.product_type = "cheat_sheet"
+        self.revenue_bridge = RevenueBridgeRouter([
+            LemonSqueezyRevenueBridge(),
+            GumroadRevenueBridge(),
+        ], farm_type="devops_cloud")
 
         # Initialize 3 competing producer agents
         self._init_producer_agents()
@@ -71,42 +69,42 @@ class DevOpsCloudFarm(BaseFarm):
             },
         )
 
-        # Agent 2: Kubernetes focus
+        # Agent 2: AWS reference focus
         agent2 = Agent(
-            id=f"{self.id}-k8s-002",
+            id=f"{self.id}-aws-002",
             credits=float(INITIAL_CREDITS),
             strategy={
                 "niche_focus": "devops_cloud",
                 "product_type": "cheat_sheet",
-                "product_variant": "kubernetes_essentials",
-                "price_target": 29.0,
-                "audience": "Platform engineers and SREs",
+                "product_variant": "aws_reference",
+                "price_target": 24.0,
+                "audience": "backend developers and cloud engineers",
                 "output_format": "markdown",
-                "quality_threshold": 0.90,
-                "items_per_pack": 60,
+                "quality_threshold": 0.88,
+                "items_per_pack": 50,
             },
         )
 
-        # Agent 3: CI/CD pipelines focus
+        # Agent 3: Kubernetes prompts focus
         agent3 = Agent(
-            id=f"{self.id}-cicd-003",
+            id=f"{self.id}-k8s-003",
             credits=float(INITIAL_CREDITS),
             strategy={
                 "niche_focus": "devops_cloud",
                 "product_type": "cheat_sheet",
-                "product_variant": "cicd_pipelines",
-                "price_target": 19.0,
-                "audience": "Software engineers automating deployments",
+                "product_variant": "k8s_prompts",
+                "price_target": 24.0,
+                "audience": "DevOps engineers using Kubernetes",
                 "output_format": "markdown",
-                "quality_threshold": 0.85,
-                "items_per_pack": 40,
+                "quality_threshold": 0.88,
+                "items_per_pack": 50,
             },
         )
 
         self.producer_agents = [
             DockerAgent(agent1),
-            DockerAgent(agent2),
-            DockerAgent(agent3),
+            AWSAgent(agent2),
+            K8sAgent(agent3),
         ]
 
     # ------------------------------------------------------------------
@@ -178,10 +176,20 @@ class DevOpsCloudFarm(BaseFarm):
                 revenue += price
                 self.seller_agent.total_revenue += price
                 self.seller_agent.sales_history.append({"sold": True, "price": price})
+                self.revenue_bridge.record_sale_attempt(price_usd=price, sold=True)
+                self.revenue_bridge.publish_product(
+                    title=title,
+                    description=description,
+                    price_usd=price,
+                )
+                # Upload to Backblaze storage
+                file_name = f"cheatsheet_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
+                self.revenue_bridge.upload_product_to_drive({"product": product, "listing": listing}, file_name)
                 logger.info("[%s] SOLD: %s @ $%.2f", self.name, title, price)
             else:
                 items_expired += 1
                 self.seller_agent.sales_history.append({"sold": False, "price": 0.0})
+                self.revenue_bridge.record_sale_attempt(price_usd=price, sold=False)
 
         self.output_buffer.clear()
 
@@ -240,7 +248,15 @@ class DevOpsCloudFarm(BaseFarm):
             strategy=copy.deepcopy(parent.strategy),
         )
 
-        self.producer_agents.append(DockerAgent(child))
+        # Create child agent of same type as parent
+        if isinstance(parent_pa, AWSAgent):
+            new_agent = AWSAgent(child)
+        elif isinstance(parent_pa, K8sAgent):
+            new_agent = K8sAgent(child)
+        else:
+            new_agent = DockerAgent(child)
+
+        self.producer_agents.append(new_agent)
         logger.info("[%s] Agent %s reproduced -> %s (gen %d)", self.name, parent.id, child.id, child.generation)
 
     def calculate_performance(self) -> None:
