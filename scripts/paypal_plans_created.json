@@ -1,0 +1,62 @@
+{
+  "plan_map": {
+    "data_cleaning": "P-0UA765714U725024GNHL7IWI",
+    "auto_reports": "P-70A78465GV8941905NHL7IXA",
+    "product_listing": "P-0MY62810HG454782VNHL7IXY",
+    "monetized_content": "P-85L99216BP042634XNHL7IYQ",
+    "react_nextjs": "P-3MT15407EK703870DNHL7IZI",
+    "devops_cloud": "P-19313396602455435NHL7I2A",
+    "mobile_dev": "P-66C82692SL033160GNHL7I2Y"
+  },
+  "details": [
+    {
+      "farm_type": "data_cleaning",
+      "product_name": "Clean Dataset ML Ready",
+      "product_id": "PROD-82D00886JC388894V",
+      "plan_id": "P-0UA765714U725024GNHL7IWI",
+      "price_usd": 7.0
+    },
+    {
+      "farm_type": "auto_reports",
+      "product_name": "AI Financial Report",
+      "product_id": "PROD-4GC04224PV269662U",
+      "plan_id": "P-70A78465GV8941905NHL7IXA",
+      "price_usd": 19.0
+    },
+    {
+      "farm_type": "product_listing",
+      "product_name": "Optimized Product Listings Pack",
+      "product_id": "PROD-9G194308SK9627318",
+      "plan_id": "P-0MY62810HG454782VNHL7IXY",
+      "price_usd": 4.0
+    },
+    {
+      "farm_type": "monetized_content",
+      "product_name": "AI Content Pack",
+      "product_id": "PROD-4MD198406W2888848",
+      "plan_id": "P-85L99216BP042634XNHL7IYQ",
+      "price_usd": 9.0
+    },
+    {
+      "farm_type": "react_nextjs",
+      "product_name": "React/Next.js Prompt Pack",
+      "product_id": "PROD-50017164BU8742056",
+      "plan_id": "P-3MT15407EK703870DNHL7IZI",
+      "price_usd": 39.0
+    },
+    {
+      "farm_type": "devops_cloud",
+      "product_name": "DevOps Cloud Cheat Sheet Pack",
+      "product_id": "PROD-9RP74469XK877251N",
+      "plan_id": "P-19313396602455435NHL7I2A",
+      "price_usd": 24.0
+    },
+    {
+      "farm_type": "mobile_dev",
+      "product_name": "Mobile Dev Starter Kit",
+      "product_id": "PROD-61N2275885066983P",
+      "plan_id": "P-66C82692SL033160GNHL7I2Y",
+      "price_usd": 34.0
+    }
+  ]
+}
