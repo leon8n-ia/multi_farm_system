@@ -23,7 +23,12 @@ from database import (
     create_subscription,
     update_subscription_status,
     update_subscription_expiry,
+    get_subscription_by_paypal_id,
+    create_paypal_subscription,
+    update_paypal_subscription_status,
+    update_paypal_subscription_expiry,
 )
+from paypal_bridge import PayPalBridge, get_paypal_bridge
 
 load_dotenv()
 
@@ -56,6 +61,19 @@ DEFAULT_DODO_PRODUCT_MAP = {
     "pdt_0NcCSCR94KtfQU0HptlG7": "mobile_dev"
 }
 DODO_PRODUCT_MAP = json.loads(os.getenv("DODO_PRODUCT_MAP", json.dumps(DEFAULT_DODO_PRODUCT_MAP)))
+
+# PayPal Plan IDs for each farm type (configured in PayPal dashboard)
+DEFAULT_PAYPAL_PLAN_MAP = {
+    "data_cleaning": "",
+    "auto_reports": "",
+    "product_listing": "",
+    "monetized_content": "",
+    "react_nextjs": "",
+    "devops_cloud": "",
+    "mobile_dev": ""
+}
+PAYPAL_PLAN_MAP = json.loads(os.getenv("PAYPAL_PLAN_MAP", json.dumps(DEFAULT_PAYPAL_PLAN_MAP)))
+PAYPAL_WEBHOOK_ID = os.getenv("PAYPAL_WEBHOOK_ID", "")
 
 
 async def self_ping_task():
@@ -261,6 +279,150 @@ async def get_subscription_status(token: str):
         "status": subscription["status"],
         "created_at": subscription["created_at"],
         "expires_at": subscription["expires_at"],
+    }
+
+
+# =============================================================================
+# PayPal Endpoints
+# =============================================================================
+
+VALID_FARM_TYPES = [
+    "data_cleaning", "auto_reports", "product_listing",
+    "monetized_content", "react_nextjs", "devops_cloud", "mobile_dev"
+]
+
+
+@app.get("/paypal/subscribe/{farm_type}")
+async def paypal_subscribe(farm_type: str):
+    """
+    Redirect user to PayPal checkout for subscription.
+
+    Args:
+        farm_type: The farm type to subscribe to
+
+    Returns:
+        Redirect to PayPal checkout page
+    """
+    if farm_type not in VALID_FARM_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid farm type. Valid types: {', '.join(VALID_FARM_TYPES)}"
+        )
+
+    plan_id = PAYPAL_PLAN_MAP.get(farm_type)
+    if not plan_id:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No PayPal plan configured for {farm_type}"
+        )
+
+    # Get PayPal bridge to determine sandbox/production URL
+    bridge = get_paypal_bridge()
+    base = "sandbox.paypal.com" if bridge.sandbox else "www.paypal.com"
+
+    # Redirect to PayPal subscription checkout
+    checkout_url = f"https://{base}/webapps/billing/subscriptions?plan_id={plan_id}"
+
+    return RedirectResponse(url=checkout_url, status_code=302)
+
+
+@app.post("/webhook/paypal")
+async def paypal_webhook(request: Request):
+    """
+    Handle PayPal webhook events for subscriptions.
+
+    Expected events:
+    - BILLING.SUBSCRIPTION.ACTIVATED - subscription activated
+    - BILLING.SUBSCRIPTION.CANCELLED - subscription cancelled
+    - BILLING.SUBSCRIPTION.EXPIRED - subscription expired
+    - BILLING.SUBSCRIPTION.SUSPENDED - payment failed
+    - PAYMENT.SALE.COMPLETED - payment successful
+    """
+    try:
+        payload = await request.json()
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON")
+
+    event_type = payload.get("event_type", "")
+    resource = payload.get("resource", {})
+
+    # Log the event for debugging
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"PayPal webhook received: {event_type}")
+
+    if event_type == "BILLING.SUBSCRIPTION.ACTIVATED":
+        # Subscription activated - create access token
+        subscription_id = resource.get("id")
+        email = resource.get("subscriber", {}).get("email_address", "")
+        plan_id = resource.get("plan_id", "")
+
+        # Determine farm_type from plan_id
+        farm_type = "default"
+        for ft, pid in PAYPAL_PLAN_MAP.items():
+            if pid == plan_id:
+                farm_type = ft
+                break
+
+        # Get billing cycle end date
+        billing_info = resource.get("billing_info", {})
+        next_billing = billing_info.get("next_billing_time")
+
+        # Check if subscription already exists
+        existing = get_subscription_by_paypal_id(subscription_id)
+        if not existing:
+            token = generate_access_token()
+            create_paypal_subscription(
+                token=token,
+                farm_type=farm_type,
+                paypal_subscription_id=subscription_id,
+                email=email,
+                expires_at=next_billing
+            )
+            logger.info(
+                f"Created PayPal subscription: {subscription_id} "
+                f"for {farm_type}, token: {token[:8]}..."
+            )
+        else:
+            # Reactivation - update status
+            update_paypal_subscription_status(subscription_id, "active")
+            if next_billing:
+                update_paypal_subscription_expiry(subscription_id, next_billing)
+
+    elif event_type == "BILLING.SUBSCRIPTION.CANCELLED":
+        subscription_id = resource.get("id")
+        update_paypal_subscription_status(subscription_id, "cancelled")
+        logger.info(f"PayPal subscription cancelled: {subscription_id}")
+
+    elif event_type == "BILLING.SUBSCRIPTION.EXPIRED":
+        subscription_id = resource.get("id")
+        update_paypal_subscription_status(subscription_id, "expired")
+        logger.info(f"PayPal subscription expired: {subscription_id}")
+
+    elif event_type == "BILLING.SUBSCRIPTION.SUSPENDED":
+        subscription_id = resource.get("id")
+        update_paypal_subscription_status(subscription_id, "suspended")
+        logger.info(f"PayPal subscription suspended: {subscription_id}")
+
+    elif event_type == "PAYMENT.SALE.COMPLETED":
+        # Renewal payment completed
+        billing_agreement_id = resource.get("billing_agreement_id")
+        if billing_agreement_id:
+            update_paypal_subscription_status(billing_agreement_id, "active")
+            logger.info(f"PayPal payment completed for: {billing_agreement_id}")
+
+    return JSONResponse({"received": True})
+
+
+@app.get("/paypal/plans")
+async def list_paypal_plans():
+    """List configured PayPal plans for each farm type (admin endpoint)."""
+    return {
+        farm_type: {
+            "plan_id": plan_id,
+            "configured": bool(plan_id)
+        }
+        for farm_type, plan_id in PAYPAL_PLAN_MAP.items()
     }
 
 
