@@ -19,28 +19,28 @@ logger = logging.getLogger(__name__)
 FARM_CONFIG: dict[str, dict] = {
     "data_cleaning": {
         "subreddits": ["datasets", "MachineLearning"],
-        "gumroad_url": "https://leonix63.gumroad.com/l/fpwkdg",
+        "gumroad_url": "https://leon8n-ia.github.io/multi_farm_system/",
         "product_type": "cleaned dataset",
         "niches": ["ecommerce", "fintech", "saas"],
         "audience": "data scientists and ML engineers",
     },
     "auto_reports": {
         "subreddits": ["datascience", "investing"],
-        "gumroad_url": "https://leonix63.gumroad.com/l/frhqhf",
+        "gumroad_url": "https://leon8n-ia.github.io/multi_farm_system/",
         "product_type": "automated financial report",
         "niches": ["crypto", "saas metrics", "trading"],
         "audience": "analysts and investors",
     },
     "product_listing": {
         "subreddits": ["ecommerce", "Entrepreneur"],
-        "gumroad_url": "https://leonix63.gumroad.com/l/jzzsv",
+        "gumroad_url": "https://leon8n-ia.github.io/multi_farm_system/",
         "product_type": "optimized product listing",
         "niches": ["mercadolibre", "amazon", "ecommerce"],
         "audience": "ecommerce sellers",
     },
     "monetized_content": {
         "subreddits": ["Python", "learnprogramming"],
-        "gumroad_url": "https://leonix63.gumroad.com/l/wnuah",
+        "gumroad_url": "https://leon8n-ia.github.io/multi_farm_system/",
         "product_type": "developer article pack",
         "niches": ["python automation", "ai tools", "scripting"],
         "audience": "developers learning automation",
@@ -99,7 +99,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Duplicate records deduplicated\n"
                 "- UTF-8 encoded, ready for pandas\n\n"
                 "Great baseline for recommendation systems or price-prediction models.\n\n"
-                "Download: https://leonix63.gumroad.com/l/fpwkdg"
+                "Download: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "datasets",
             "score_estimado": 78,
@@ -114,7 +114,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Normalized amounts and timestamps\n"
                 "- No PII, synthetic merchant IDs\n\n"
                 "Useful for training classifiers or benchmarking models.\n\n"
-                "Link: https://leonix63.gumroad.com/l/fpwkdg"
+                "Link: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "MachineLearning",
             "score_estimado": 72,
@@ -129,7 +129,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- 24 months of data per company\n"
                 "- Outliers flagged, missing values imputed\n\n"
                 "Perfect for SaaS analytics projects.\n\n"
-                "Get it: https://leonix63.gumroad.com/l/fpwkdg"
+                "Get it: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "datascience",
             "score_estimado": 68,
@@ -146,7 +146,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Generates PDF report with charts\n"
                 "- Includes risk metrics (Sharpe, volatility)\n\n"
                 "Template + script available for customization.\n\n"
-                "Check it out: https://leonix63.gumroad.com/l/frhqhf"
+                "Check it out: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "investing",
             "score_estimado": 65,
@@ -161,7 +161,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Weekly email reports\n"
                 "- Google Sheets + Python integration\n\n"
                 "Saves hours of manual reporting.\n\n"
-                "Template: https://leonix63.gumroad.com/l/frhqhf"
+                "Template: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "datascience",
             "score_estimado": 71,
@@ -179,7 +179,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Price ending in 9 or 7\n"
                 "- First image: product on white background\n\n"
                 "Templates with examples for each category.\n\n"
-                "Get them: https://leonix63.gumroad.com/l/jzzsv"
+                "Get them: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "ecommerce",
             "score_estimado": 74,
@@ -194,7 +194,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Works for Amazon, MercadoLibre, Shopify\n"
                 "- Includes keyword research data\n\n"
                 "Increased CTR by 23% in our tests.\n\n"
-                "Try it: https://leonix63.gumroad.com/l/jzzsv"
+                "Try it: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "Entrepreneur",
             "score_estimado": 69,
@@ -212,7 +212,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Slack/Discord notifications\n"
                 "- Database backup automation\n\n"
                 "All scripts documented with examples.\n\n"
-                "Collection: https://leonix63.gumroad.com/l/wnuah"
+                "Collection: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "Python",
             "score_estimado": 76,
@@ -228,7 +228,7 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Error handling and retries\n"
                 "- Real-world use cases\n\n"
                 "Includes 20+ working code examples.\n\n"
-                "Get it: https://leonix63.gumroad.com/l/wnuah"
+                "Get it: https://leon8n-ia.github.io/multi_farm_system/"
             ),
             "subreddit": "learnprogramming",
             "score_estimado": 72,
