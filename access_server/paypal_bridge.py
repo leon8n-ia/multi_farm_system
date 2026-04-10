@@ -369,17 +369,20 @@ class PayPalBridge:
 _bridge_instance: Optional[PayPalBridge] = None
 
 
-def get_paypal_bridge(sandbox: bool = True) -> PayPalBridge:
+def get_paypal_bridge(sandbox: bool = None) -> PayPalBridge:
     """
     Get or create singleton PayPal bridge instance.
 
     Args:
-        sandbox: Use sandbox environment (default True)
+        sandbox: Use sandbox environment. If None, reads from PAYPAL_SANDBOX env var.
+                 Defaults to False (production) if env var is not set.
 
     Returns:
         PayPalBridge instance
     """
     global _bridge_instance
     if _bridge_instance is None:
+        if sandbox is None:
+            sandbox = os.getenv("PAYPAL_SANDBOX", "false").lower() == "true"
         _bridge_instance = PayPalBridge(sandbox=sandbox)
     return _bridge_instance
