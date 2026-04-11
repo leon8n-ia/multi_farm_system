@@ -99,7 +99,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Duplicate records deduplicated\n"
                 "- UTF-8 encoded, ready for pandas\n\n"
                 "Great baseline for recommendation systems or price-prediction models.\n\n"
-                "Download: https://leon8n-ia.github.io/multi_farm_system/"
+                "Download: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "datasets",
             "score_estimado": 78,
@@ -114,7 +115,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Normalized amounts and timestamps\n"
                 "- No PII, synthetic merchant IDs\n\n"
                 "Useful for training classifiers or benchmarking models.\n\n"
-                "Link: https://leon8n-ia.github.io/multi_farm_system/"
+                "Link: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "MachineLearning",
             "score_estimado": 72,
@@ -129,7 +131,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- 24 months of data per company\n"
                 "- Outliers flagged, missing values imputed\n\n"
                 "Perfect for SaaS analytics projects.\n\n"
-                "Get it: https://leon8n-ia.github.io/multi_farm_system/"
+                "Get it: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "datascience",
             "score_estimado": 68,
@@ -146,7 +149,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Generates PDF report with charts\n"
                 "- Includes risk metrics (Sharpe, volatility)\n\n"
                 "Template + script available for customization.\n\n"
-                "Check it out: https://leon8n-ia.github.io/multi_farm_system/"
+                "Check it out: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "investing",
             "score_estimado": 65,
@@ -161,7 +165,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Weekly email reports\n"
                 "- Google Sheets + Python integration\n\n"
                 "Saves hours of manual reporting.\n\n"
-                "Template: https://leon8n-ia.github.io/multi_farm_system/"
+                "Template: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "datascience",
             "score_estimado": 71,
@@ -179,7 +184,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Price ending in 9 or 7\n"
                 "- First image: product on white background\n\n"
                 "Templates with examples for each category.\n\n"
-                "Get them: https://leon8n-ia.github.io/multi_farm_system/"
+                "Get them: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "ecommerce",
             "score_estimado": 74,
@@ -194,7 +200,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Works for Amazon, MercadoLibre, Shopify\n"
                 "- Includes keyword research data\n\n"
                 "Increased CTR by 23% in our tests.\n\n"
-                "Try it: https://leon8n-ia.github.io/multi_farm_system/"
+                "Try it: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "Entrepreneur",
             "score_estimado": 69,
@@ -212,7 +219,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Slack/Discord notifications\n"
                 "- Database backup automation\n\n"
                 "All scripts documented with examples.\n\n"
-                "Collection: https://leon8n-ia.github.io/multi_farm_system/"
+                "Collection: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "Python",
             "score_estimado": 76,
@@ -228,7 +236,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Error handling and retries\n"
                 "- Real-world use cases\n\n"
                 "Includes 20+ working code examples.\n\n"
-                "Get it: https://leon8n-ia.github.io/multi_farm_system/"
+                "Get it: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "learnprogramming",
             "score_estimado": 72,
@@ -246,7 +255,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Testing with Vitest/RTL\n"
                 "- TypeScript type generation\n\n"
                 "Each prompt tested on real projects.\n\n"
-                "Get them: https://leon8n-ia.github.io/multi_farm_system/"
+                "Get them: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "reactjs",
             "score_estimado": 82,
@@ -262,7 +272,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Auth, DB, API routes pre-configured\n"
                 "- 100+ prompts for common tasks\n\n"
                 "Ship faster with AI.\n\n"
-                "Starter: https://leon8n-ia.github.io/multi_farm_system/"
+                "Starter: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "webdev",
             "score_estimado": 79,
@@ -280,7 +291,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Security best practices\n"
                 "- Debugging containers\n\n"
                 "PDF + Markdown versions included.\n\n"
-                "Download: https://leon8n-ia.github.io/multi_farm_system/"
+                "Download: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "devops",
             "score_estimado": 85,
@@ -296,7 +308,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- CI/CD with GitHub Actions\n"
                 "- Monitoring with CloudWatch\n\n"
                 "Battle-tested in production.\n\n"
-                "Get it: https://leon8n-ia.github.io/multi_farm_system/"
+                "Get it: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "aws",
             "score_estimado": 78,
@@ -312,7 +325,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Resource limits and requests\n"
                 "- RBAC quick reference\n\n"
                 "Print-friendly PDF.\n\n"
-                "Download: https://leon8n-ia.github.io/multi_farm_system/"
+                "Download: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "devops",
             "score_estimado": 81,
@@ -330,7 +344,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Voice input support\n"
                 "- 50+ Cursor prompts included\n\n"
                 "Ship mobile AI apps faster.\n\n"
-                "Starter: https://leon8n-ia.github.io/multi_farm_system/"
+                "Starter: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "reactnative",
             "score_estimado": 77,
@@ -346,7 +361,8 @@ _SIMULATION_POSTS_BY_FARM: dict[str, list[dict]] = {
                 "- Offline caching patterns\n"
                 "- Cursor prompts for Flutter\n\n"
                 "Works with GPT-4 and Claude.\n\n"
-                "Get it: https://leon8n-ia.github.io/multi_farm_system/"
+                "Get it: https://leon8n-ia.github.io/multi_farm_system/\n\n"
+                "Join our Discord community: https://discord.gg/cWfaKUtgSB"
             ),
             "subreddit": "FlutterDev",
             "score_estimado": 74,

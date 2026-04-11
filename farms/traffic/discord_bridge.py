@@ -237,7 +237,8 @@ class DiscordBridge:
                     "e-commerce, financial, sensor data.\n\n"
                     "Figured someone might find them useful for testing ML pipelines "
                     "or benchmarking. Nulls handled, outliers flagged, dtypes fixed.\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Finally automated most of my data cleaning workflow. "
@@ -245,14 +246,16 @@ class DiscordBridge:
                     "embedded in numeric fields.\n\n"
                     "Packaged a few production-ready datasets if anyone needs clean data "
                     "to prototype with instead of spending hours on preprocessing.\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Spent way too long cleaning messy CSVs this month. "
                     "Inconsistent nulls (`N/A`, `-`, `null`, empty strings) are the worst.\n\n"
                     "If you need already-cleaned datasets for ML experiments — "
                     "saved some here so you can skip the preprocessing hell:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
             ],
             "auto_reports": [
@@ -261,21 +264,24 @@ class DiscordBridge:
                     "The templates are pretty flexible — PDF, Markdown, or HTML output.\n\n"
                     "Works well for weekly KPIs, quarterly summaries, or any recurring report "
                     "you're tired of generating manually.\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Automated our team's monthly reporting workflow. "
                     "Connects to SQL/Postgres, pulls metrics, generates charts, "
                     "exports to PDF with proper formatting.\n\n"
                     "Sharing the templates in case anyone else is stuck doing this manually:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Our PM kept asking for the same reports every week. "
                     "Finally wrote a script that auto-generates them from the database.\n\n"
                     "If you need automated report generation with charts and tables, "
                     "I packaged the templates here:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
             ],
             "product_listing": [
@@ -285,21 +291,24 @@ class DiscordBridge:
                     "from raw product data.\n\n"
                     "Handles categorization, keyword extraction, and structured output. "
                     "Might be useful if you're dealing with large catalogs:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Had to migrate 5k+ product listings between platforms. "
                     "Built some tooling to normalize titles, descriptions, and attributes.\n\n"
                     "If anyone's dealing with messy product catalogs or needs to bulk-generate "
                     "listings, this might save you some time:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "E-commerce product data is always a mess — inconsistent titles, "
                     "missing attributes, duplicate SKUs.\n\n"
                     "Wrote a pipeline that cleans and standardizes product listings. "
                     "Sharing it here if anyone needs it:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
             ],
             "monetized_content": [
@@ -308,21 +317,24 @@ class DiscordBridge:
                     "The key was getting the tone right — informative, not salesy.\n\n"
                     "Generates long-form content with proper code examples and formatting. "
                     "Useful for dev blogs or documentation:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Our content team was bottlenecked on technical writing. "
                     "Built a system that drafts articles from outlines — "
                     "handles code snippets, diagrams, and SEO.\n\n"
                     "Sharing the templates if anyone needs to scale technical content:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Writing technical tutorials is time-consuming. "
                     "Automated the first draft generation — still needs human review, "
                     "but saves ~70% of the initial writing time.\n\n"
                     "Templates and examples here:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
             ],
             "react_nextjs": [
@@ -330,20 +342,23 @@ class DiscordBridge:
                     "Compiled 200+ Cursor prompts for React/Next.js development. "
                     "Components, hooks, App Router patterns — all tested on real projects.\n\n"
                     "Saves a ton of time when building with AI assistance:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Built a Next.js 14 starter optimized for AI-assisted development. "
                     "App Router, TypeScript, shadcn/ui, plus 100+ prompts for common tasks.\n\n"
                     "Ship faster with AI:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "If you're using Cursor or Claude for React development, "
                     "I put together a collection of prompts that work well for components, "
                     "hooks, and Next.js patterns.\n\n"
                     "Might save you some prompt engineering time:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
             ],
             "devops_cloud": [
@@ -351,19 +366,22 @@ class DiscordBridge:
                     "Updated my Docker cheat sheet for 2026 — CLI commands, Compose v2, "
                     "multi-stage builds, security best practices.\n\n"
                     "PDF + Markdown versions. Useful for quick reference:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Compiled AWS + Terraform patterns I use daily: VPC, ECS, RDS modules, "
                     "IAM templates, CI/CD with GitHub Actions.\n\n"
                     "Battle-tested configs if anyone needs them:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "K8s reference I keep open daily — kubectl commands, Helm patterns, "
                     "debugging tips, RBAC quick reference.\n\n"
                     "Print-friendly PDF:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
             ],
             "mobile_dev": [
@@ -371,24 +389,27 @@ class DiscordBridge:
                     "Built a React Native starter for AI-powered apps — Expo SDK 52, "
                     "TypeScript, Claude API integration, chat UI components.\n\n"
                     "Ship mobile AI apps faster:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "Flutter toolkit for adding AI features — pre-built chat widgets, "
                     "streaming responses, offline caching patterns.\n\n"
                     "Works with GPT-4 and Claude:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
                 (
                     "If you're building mobile apps with AI features, "
                     "I put together some starter code and prompts for React Native and Flutter.\n\n"
                     "Might save you some setup time:\n\n"
-                    f"<{url}>"
+                    f"<{url}>\n\n"
+                    "Join our Discord community: https://discord.gg/cWfaKUtgSB"
                 ),
             ],
         }
         return templates.get(niche, [
-            f"Sharing a useful resource for {niche.replace('_', ' ')} workflows:\n\n<{url}>"
+            f"Sharing a useful resource for {niche.replace('_', ' ')} workflows:\n\n<{url}>\n\nJoin our Discord community: https://discord.gg/cWfaKUtgSB"
         ])
 
     # ------------------------------------------------------------------
