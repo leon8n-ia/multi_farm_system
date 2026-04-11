@@ -325,6 +325,67 @@ class DiscordBridge:
                     f"<{url}>"
                 ),
             ],
+            "react_nextjs": [
+                (
+                    "Compiled 200+ Cursor prompts for React/Next.js development. "
+                    "Components, hooks, App Router patterns — all tested on real projects.\n\n"
+                    "Saves a ton of time when building with AI assistance:\n\n"
+                    f"<{url}>"
+                ),
+                (
+                    "Built a Next.js 14 starter optimized for AI-assisted development. "
+                    "App Router, TypeScript, shadcn/ui, plus 100+ prompts for common tasks.\n\n"
+                    "Ship faster with AI:\n\n"
+                    f"<{url}>"
+                ),
+                (
+                    "If you're using Cursor or Claude for React development, "
+                    "I put together a collection of prompts that work well for components, "
+                    "hooks, and Next.js patterns.\n\n"
+                    "Might save you some prompt engineering time:\n\n"
+                    f"<{url}>"
+                ),
+            ],
+            "devops_cloud": [
+                (
+                    "Updated my Docker cheat sheet for 2026 — CLI commands, Compose v2, "
+                    "multi-stage builds, security best practices.\n\n"
+                    "PDF + Markdown versions. Useful for quick reference:\n\n"
+                    f"<{url}>"
+                ),
+                (
+                    "Compiled AWS + Terraform patterns I use daily: VPC, ECS, RDS modules, "
+                    "IAM templates, CI/CD with GitHub Actions.\n\n"
+                    "Battle-tested configs if anyone needs them:\n\n"
+                    f"<{url}>"
+                ),
+                (
+                    "K8s reference I keep open daily — kubectl commands, Helm patterns, "
+                    "debugging tips, RBAC quick reference.\n\n"
+                    "Print-friendly PDF:\n\n"
+                    f"<{url}>"
+                ),
+            ],
+            "mobile_dev": [
+                (
+                    "Built a React Native starter for AI-powered apps — Expo SDK 52, "
+                    "TypeScript, Claude API integration, chat UI components.\n\n"
+                    "Ship mobile AI apps faster:\n\n"
+                    f"<{url}>"
+                ),
+                (
+                    "Flutter toolkit for adding AI features — pre-built chat widgets, "
+                    "streaming responses, offline caching patterns.\n\n"
+                    "Works with GPT-4 and Claude:\n\n"
+                    f"<{url}>"
+                ),
+                (
+                    "If you're building mobile apps with AI features, "
+                    "I put together some starter code and prompts for React Native and Flutter.\n\n"
+                    "Might save you some setup time:\n\n"
+                    f"<{url}>"
+                ),
+            ],
         }
         return templates.get(niche, [
             f"Sharing a useful resource for {niche.replace('_', ' ')} workflows:\n\n<{url}>"
