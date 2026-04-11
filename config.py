@@ -16,7 +16,7 @@ INITIAL_CREDITS = 200
 NO_PROFIT_THRESHOLD = 5
 
 DISCORD_ENABLED = True           # Activado — token configurado en variable de entorno
-DISCORD_TARGET_CHANNELS = ["1488986417182019780"]
+DISCORD_TARGET_CHANNELS = ["1488986417182019780", "1492600037409296424"]
 
 # Gumroad product URLs by niche (public permalinks)
 GUMROAD_PRODUCT_URLS: dict[str, str] = {
