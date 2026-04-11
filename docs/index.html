@@ -146,6 +146,54 @@
         ]
     }
     </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What are the best cursor prompts for React and Next.js?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our React/Next.js Prompt Pack includes 200+ cursor prompts tested on real projects, covering components, hooks, App Router patterns and TypeScript generation."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Where can I find a Docker cheat sheet for 2026?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our DevOps Cloud Pack includes an updated Docker cheat sheet for 2026 with CLI commands, Compose v2 examples, multi-stage builds and security best practices. PDF and Markdown included."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Where can I download clean ecommerce datasets for machine learning?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our Clean Dataset pack includes pre-cleaned ecommerce, fintech and SaaS datasets ready for pandas, normalized and deduplicated."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the best React Native starter kit with AI integration?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Our Mobile Dev Starter Kit includes Expo SDK + TypeScript + Claude API integration with chat UI and voice input support."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Are these resources updated regularly?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. All resources are generated and updated automatically by our AI farm system every cycle."
+                }
+            }
+        ]
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -603,6 +651,67 @@
             text-decoration: underline;
         }
 
+        /* FAQ Section */
+        .faq {
+            padding: 100px 24px;
+            background: linear-gradient(180deg, transparent 0%, rgba(30, 41, 59, 0.3) 100%);
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background 0.2s;
+        }
+
+        .faq-question:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .faq-question::after {
+            content: "+";
+            font-size: 1.5rem;
+            color: var(--accent);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            padding: 0 24px 24px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             nav ul {
@@ -667,7 +776,7 @@
                     <div class="product-icon">📊</div>
                     <h3>Clean Dataset ML Ready</h3>
                     <div class="price">$7<span>/mo</span></div>
-                    <p>Clean datasets for machine learning — pre-processed, normalized, and ready for training models.</p>
+                    <p>Clean ecommerce dataset for machine learning — pre-processed, normalized, and ready for pandas.</p>
                     <a href="https://multi-farm-system.onrender.com/paypal/subscribe/data_cleaning" target="_blank" class="subscribe-btn">Subscribe</a>
                 </div>
 
@@ -694,7 +803,7 @@
                     <div class="product-icon">✍️</div>
                     <h3>AI Content Pack</h3>
                     <div class="price">$9<span>/mo</span></div>
-                    <p>High-quality articles, blog posts and social media content ready to publish.</p>
+                    <p>Python automation scripts for developers — articles, tutorials and code examples ready to publish.</p>
                     <a href="https://multi-farm-system.onrender.com/paypal/subscribe/monetized_content" target="_blank" class="subscribe-btn">Subscribe</a>
                 </div>
 
@@ -703,7 +812,7 @@
                     <div class="product-icon">⚛️</div>
                     <h3>React/Next.js Prompt Pack</h3>
                     <div class="price">$39<span>/mo</span></div>
-                    <p>200+ Cursor prompts for React and Next.js — battle-tested prompt packs for developers.</p>
+                    <p>Cursor prompts React Next.js 2026 — 200+ battle-tested prompts for AI-assisted development.</p>
                     <a href="https://multi-farm-system.onrender.com/paypal/subscribe/react_nextjs" target="_blank" class="subscribe-btn">Subscribe</a>
                 </div>
 
@@ -712,7 +821,7 @@
                     <div class="product-icon">🐳</div>
                     <h3>DevOps Cloud Cheat Sheet Pack</h3>
                     <div class="price">$24<span>/mo</span></div>
-                    <p>Docker cheat sheet 2026, Kubernetes commands, and AWS patterns — DevOps cloud cheat sheet pack.</p>
+                    <p>Docker cheat sheet PDF 2026, Kubernetes commands, and AWS patterns — DevOps cloud reference.</p>
                     <a href="https://multi-farm-system.onrender.com/paypal/subscribe/devops_cloud" target="_blank" class="subscribe-btn">Subscribe</a>
                 </div>
 
@@ -721,7 +830,7 @@
                     <div class="product-icon">📱</div>
                     <h3>Mobile Dev Starter Kit</h3>
                     <div class="price">$34<span>/mo</span></div>
-                    <p>React Native starter kit and Flutter components with Claude API integrations built-in.</p>
+                    <p>React Native starter kit with Claude API — Expo SDK, TypeScript, chat UI and voice input.</p>
                     <a href="https://multi-farm-system.onrender.com/paypal/subscribe/mobile_dev" target="_blank" class="subscribe-btn">Subscribe</a>
                 </div>
             </div>
@@ -756,6 +865,48 @@
             </div>
             <div class="access-info">
                 <p>After purchase, you'll receive a unique access link via email. Content updates automatically each cycle. Email support response within 48 hours.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Common questions about our developer resources</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">What are the best cursor prompts for React and Next.js?</div>
+                    <div class="faq-answer">
+                        <p>Our React/Next.js Prompt Pack includes 200+ cursor prompts tested on real projects, covering components, hooks, App Router patterns and TypeScript generation.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Where can I find a Docker cheat sheet for 2026?</div>
+                    <div class="faq-answer">
+                        <p>Our DevOps Cloud Pack includes an updated Docker cheat sheet for 2026 with CLI commands, Compose v2 examples, multi-stage builds and security best practices. PDF and Markdown included.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Where can I download clean ecommerce datasets for machine learning?</div>
+                    <div class="faq-answer">
+                        <p>Our Clean Dataset pack includes pre-cleaned ecommerce, fintech and SaaS datasets ready for pandas, normalized and deduplicated.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What is the best React Native starter kit with AI integration?</div>
+                    <div class="faq-answer">
+                        <p>Our Mobile Dev Starter Kit includes Expo SDK + TypeScript + Claude API integration with chat UI and voice input support.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Are these resources updated regularly?</div>
+                    <div class="faq-answer">
+                        <p>Yes. All resources are generated and updated automatically by our AI farm system every cycle.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -803,6 +954,14 @@
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
+            });
+        });
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const item = this.parentElement;
+                item.classList.toggle('active');
             });
         });
     </script>
